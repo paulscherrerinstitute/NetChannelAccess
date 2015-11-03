@@ -1,0 +1,95 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChannelAccess", "ChannelAccess\ChannelAccess.csproj", "{CC7E581B-0A2D-4B9C-91E9-59F1015ACA67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8B6F89E3-A78F-4698-8F3B-B88F7269C089}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+		README.txt = README.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleClient", "ExampleClient\ExampleClient.csproj", "{59D5E39C-7506-40FA-A0F9-00867BEB5419}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleServer", "ExampleServer\ExampleServer.csproj", "{A23D4629-177D-4A41-9904-B8A68DA11614}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChannelAccessTests", "ChannelAccessTests\ChannelAccessTests.csproj", "{CECA35DD-4F61-4316-BF4E-61233CF75F9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitorTest", "MonitorTest\MonitorTest.csproj", "{0E7FB0DD-745E-4C2A-9F70-8AE151B9DF76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{FCD5CD65-9B89-45B5-A7C7-56A7C3ACDB7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceCheck", "PerformanceCheck\PerformanceCheck.csproj", "{15511C42-E254-4F8D-936F-8220FE68A21B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC7E581B-0A2D-4B9C-91E9-59F1015ACA67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC7E581B-0A2D-4B9C-91E9-59F1015ACA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC7E581B-0A2D-4B9C-91E9-59F1015ACA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC7E581B-0A2D-4B9C-91E9-59F1015ACA67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59D5E39C-7506-40FA-A0F9-00867BEB5419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59D5E39C-7506-40FA-A0F9-00867BEB5419}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59D5E39C-7506-40FA-A0F9-00867BEB5419}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59D5E39C-7506-40FA-A0F9-00867BEB5419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A23D4629-177D-4A41-9904-B8A68DA11614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A23D4629-177D-4A41-9904-B8A68DA11614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A23D4629-177D-4A41-9904-B8A68DA11614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A23D4629-177D-4A41-9904-B8A68DA11614}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CECA35DD-4F61-4316-BF4E-61233CF75F9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CECA35DD-4F61-4316-BF4E-61233CF75F9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CECA35DD-4F61-4316-BF4E-61233CF75F9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CECA35DD-4F61-4316-BF4E-61233CF75F9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E7FB0DD-745E-4C2A-9F70-8AE151B9DF76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E7FB0DD-745E-4C2A-9F70-8AE151B9DF76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E7FB0DD-745E-4C2A-9F70-8AE151B9DF76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E7FB0DD-745E-4C2A-9F70-8AE151B9DF76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCD5CD65-9B89-45B5-A7C7-56A7C3ACDB7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCD5CD65-9B89-45B5-A7C7-56A7C3ACDB7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCD5CD65-9B89-45B5-A7C7-56A7C3ACDB7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCD5CD65-9B89-45B5-A7C7-56A7C3ACDB7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15511C42-E254-4F8D-936F-8220FE68A21B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15511C42-E254-4F8D-936F-8220FE68A21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15511C42-E254-4F8D-936F-8220FE68A21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15511C42-E254-4F8D-936F-8220FE68A21B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://tfs.psi.ch/tfs/defaultcollection
+		SccProjectUniqueName0 = ChannelAccess\\ChannelAccess.csproj
+		SccProjectName0 = ChannelAccess
+		SccLocalPath0 = ChannelAccess
+		SccLocalPath1 = .
+		SccProjectUniqueName2 = ChannelAccessTests\\ChannelAccessTests.csproj
+		SccProjectName2 = ChannelAccessTests
+		SccLocalPath2 = ChannelAccessTests
+		SccProjectUniqueName3 = ExampleClient\\ExampleClient.csproj
+		SccProjectName3 = ExampleClient
+		SccLocalPath3 = ExampleClient
+		SccProjectUniqueName4 = ExampleServer\\ExampleServer.csproj
+		SccProjectName4 = ExampleServer
+		SccLocalPath4 = ExampleServer
+		SccProjectUniqueName5 = MonitorTest\\MonitorTest.csproj
+		SccProjectName5 = MonitorTest
+		SccLocalPath5 = MonitorTest
+		SccProjectUniqueName6 = PerformanceCheck\\PerformanceCheck.csproj
+		SccProjectName6 = PerformanceCheck
+		SccLocalPath6 = PerformanceCheck
+		SccProjectUniqueName7 = Sandbox\\Sandbox.csproj
+		SccProjectName7 = Sandbox
+		SccLocalPath7 = Sandbox
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+EndGlobal

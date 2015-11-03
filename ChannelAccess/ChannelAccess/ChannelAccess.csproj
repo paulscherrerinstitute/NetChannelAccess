@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CC7E581B-0A2D-4B9C-91E9-59F1015ACA67}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EpicsSharp.ChannelAccess</RootNamespace>
+    <AssemblyName>ChannelAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Client\CAConfiguration.cs" />
+    <Compile Include="Client\CAConstants.cs" />
+    <Compile Include="Client\ClientTcpReceiver.cs" />
+    <Compile Include="Common\DataPacket.cs" />
+    <Compile Include="Client\Channel.cs" />
+    <Compile Include="Client\CAClient.cs" />
+    <Compile Include="Client\ExtendedTypes\extControlEnum.cs" />
+    <Compile Include="Client\GenericChannel.cs" />
+    <Compile Include="Client\ExtendedTypes\Decodable.cs" />
+    <Compile Include="Client\ExtendedTypes\ExtAcknowledge.cs" />
+    <Compile Include="Client\ExtendedTypes\extControl.cs" />
+    <Compile Include="Client\ExtendedTypes\extGraphic.cs" />
+    <Compile Include="Client\ExtendedTypes\extTimeType.cs" />
+    <Compile Include="Client\ExtendedTypes\extType.cs" />
+    <Compile Include="Common\Pipes\DataFilter.cs" />
+    <Compile Include="Common\Pipes\DataPipe.cs" />
+    <Compile Include="Client\ClientHandleMessage.cs" />
+    <Compile Include="Common\Pipes\PacketSplitter.cs" />
+    <Compile Include="Common\Pipes\TcpReceiver.cs" />
+    <Compile Include="Common\Pipes\UdpReceiver.cs" />
+    <Compile Include="Client\Searcher.cs" />
+    <Compile Include="Client\TypeHandling.cs" />
+    <Compile Include="Constants\AccessRights.cs" />
+    <Compile Include="Constants\CAConstants.cs" />
+    <Compile Include="Constants\ChannelStatus.cs" />
+    <Compile Include="Constants\CommandID.cs" />
+    <Compile Include="Constants\EpicsTransitionStatus.cs" />
+    <Compile Include="Constants\EpicsType.cs" />
+    <Compile Include="Constants\MonitorMask.cs" />
+    <Compile Include="Constants\ScanAlgorithm.cs" />
+    <Compile Include="Constants\AlarmSeverity.cs" />
+    <Compile Include="Constants\AlarmStatus.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\CAFieldAttribute.cs" />
+    <Compile Include="Server\CARecordCollection.cs" />
+    <Compile Include="Server\CAServer.cs" />
+    <Compile Include="Server\ChannelTypes\DisplayChannel.cs" />
+    <Compile Include="Server\ChannelTypes\DataPacketBuilder.cs" />
+    <Compile Include="Server\ChannelTypes\ControlChannel.cs" />
+    <Compile Include="Server\ChannelTypes\EnumControlChannel.cs" />
+    <Compile Include="Server\ChannelTypes\TimeChannel.cs" />
+    <Compile Include="Server\ChannelTypes\ExtChannel.cs" />
+    <Compile Include="Server\ChannelTypes\SimpleChannel.cs" />
+    <Compile Include="Server\EpicsEvent.cs" />
+    <Compile Include="Server\RecordTypes\ArrayContainer.cs" />
+    <Compile Include="Server\RecordTypes\CAArrayRecord.cs" />
+    <Compile Include="Server\RecordTypes\CAByteArrayRecord.cs" />
+    <Compile Include="Server\RecordTypes\CAByteRecord.cs" />
+    <Compile Include="Server\RecordTypes\CADoubleArrayRecord.cs" />
+    <Compile Include="Server\RecordTypes\CADoubleRecord.cs" />
+    <Compile Include="Server\RecordTypes\CAEnumRecord.cs" />
+    <Compile Include="Server\RecordTypes\CAFloatArrayRecord.cs" />
+    <Compile Include="Server\RecordTypes\CAFloatRecord.cs" />
+    <Compile Include="Server\RecordTypes\CAIntArrayRecord.cs" />
+    <Compile Include="Server\RecordTypes\CAIntRecord.cs" />
+    <Compile Include="Server\RecordTypes\CARecord.cs" />
+    <Compile Include="Server\RecordTypes\CARecordGeneric.cs" />
+    <Compile Include="Server\RecordTypes\CAShortRecord.cs" />
+    <Compile Include="Server\RecordTypes\CAStringRecord.cs" />
+    <Compile Include="Server\RecordTypes\CAValueRecord.cs" />
+    <Compile Include="Server\ServerHandleMessage.cs" />
+    <Compile Include="Server\CaServerListener.cs" />
+    <Compile Include="Server\ServerTcpReceiver.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ChannelAccess.nuspec" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del "$(TargetDir)*.nupkg"
+if exist "C:\nuget\NuGet.exe" "C:\nuget\NuGet.exe" pack "$(ProjectPath)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
