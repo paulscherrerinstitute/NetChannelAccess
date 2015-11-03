@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F4E955E5-E6D7-49A4-BD5B-43FED09E801A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CaSharpServer</RootNamespace>
+    <AssemblyName>CaSharpServer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CABeacon.cs" />
+    <Compile Include="CAChannelMonitor.cs" />
+    <Compile Include="CAFieldAttribute.cs" />
+    <Compile Include="CAUdpListener.cs" />
+    <Compile Include="Constants\AccessRights.cs" />
+    <Compile Include="Constants\AlarmSeverity.cs" />
+    <Compile Include="Constants\AlarmStatus.cs" />
+    <Compile Include="Constants\CAConstants.cs" />
+    <Compile Include="RecordTypes\ArrayContainer.cs" />
+    <Compile Include="RecordTypes\CAArrayRecord.cs" />
+    <Compile Include="RecordTypes\CAByteArrayRecord.cs" />
+    <Compile Include="RecordTypes\CADoubleRecord.cs" />
+    <Compile Include="RecordTypes\CAIntArrayRecord.cs" />
+    <Compile Include="RecordTypes\CAEnumRecord.cs" />
+    <Compile Include="RecordTypes\CARecord.cs" />
+    <Compile Include="CARecordCollection.cs" />
+    <Compile Include="RecordTypes\CARecordGeneric.cs" />
+    <Compile Include="CAServer.cs" />
+    <Compile Include="CAServerChannel.cs" />
+    <Compile Include="CATcpConnection.cs" />
+    <Compile Include="Constants\CommandId.cs" />
+    <Compile Include="Constants\EpicsTransitionStatus.cs" />
+    <Compile Include="Constants\EpicsType.cs" />
+    <Compile Include="Constants\MonitorMask.cs" />
+    <Compile Include="ByteConverter.cs" />
+    <Compile Include="Constants\ScanAlgorithm.cs" />
+    <Compile Include="RecordTypes\CAStringRecord.cs" />
+    <Compile Include="RecordTypes\CAValueRecord.cs" />
+    <Compile Include="RecordTypes\CAIntRecord.cs" />
+    <Compile Include="RecordTypes\CAFloatRecord.cs" />
+    <Compile Include="RecordTypes\CAShortRecord.cs" />
+    <Compile Include="Pipe.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CAServerFilter.cs" />
+    <Compile Include="RecordTypes\CAFloatArrayRecord.cs" />
+    <Compile Include="RecordTypes\CADoubleArrayRecord.cs" />
+    <Compile Include="RecordTypes\CAByteRecord.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del "$(TargetDir)*.nupkg"
+if exist C:\nuget\NuGet.exe C:\nuget\NuGet.exe pack "$(ProjectPath)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
