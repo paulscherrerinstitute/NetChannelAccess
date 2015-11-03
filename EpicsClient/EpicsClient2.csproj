@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A1BED09B-5D49-4480-A6DD-736B681493A6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PSI.EpicsClient2</RootNamespace>
+    <AssemblyName>EpicsClient2</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\EpicsClient2.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CaConfiguration.cs" />
+    <Compile Include="Constants\AccessRights.cs" />
+    <Compile Include="Constants\EpicsConstants.cs" />
+    <Compile Include="Constants\ChannelStatus.cs" />
+    <Compile Include="Constants\CommandId.cs" />
+    <Compile Include="Constants\Severity.cs" />
+    <Compile Include="Constants\Status.cs" />
+    <Compile Include="EpicsGenericChannel.cs" />
+    <Compile Include="Constants\MonitorMask.cs" />
+    <Compile Include="ExtendedTypes\extAcknowledge.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExtendedTypes\extControl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExtendedTypes\extControlEnum.cs" />
+    <Compile Include="ExtendedTypes\extEnumType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExtendedTypes\extGraphic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExtendedTypes\extTimeType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExtendedTypes\extType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ExtendedTypes\Decodable.cs" />
+    <Compile Include="Pipes\DataFilter.cs" />
+    <Compile Include="DataPacket.cs" />
+    <Compile Include="Pipes\DataPipe.cs" />
+    <Compile Include="EpicsChannel.cs" />
+    <Compile Include="EpicsClient.cs" />
+    <Compile Include="Constants\EpicsType.cs" />
+    <Compile Include="Pipes\HandleMessage.cs" />
+    <Compile Include="Pipes\PacketSplitter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Searcher.cs" />
+    <Compile Include="Pipes\TcpReceiver.cs" />
+    <Compile Include="Pipes\UdpReceiver.cs" />
+    <Compile Include="TypeHandling.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del "$(TargetDir)*.nupkg"
+if exist "C:\nuget\NuGet.exe" "C:\nuget\NuGet.exe" pack "$(ProjectPath)"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
