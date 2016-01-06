@@ -115,8 +115,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del "$(TargetDir)*.nupkg"
-if exist "C:\nuget\NuGet.exe" "C:\nuget\NuGet.exe" pack "$(ProjectPath)"</PostBuildEvent>
+    <PostBuildEvent>rem del "$(TargetDir)*.nupkg"
+rem if exist "C:\nuget\NuGet.exe" "C:\nuget\NuGet.exe" pack "$(ProjectPath)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
