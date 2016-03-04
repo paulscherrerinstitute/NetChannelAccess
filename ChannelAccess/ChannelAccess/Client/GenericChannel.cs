@@ -100,7 +100,7 @@ namespace EpicsSharp.ChannelAccess.Client
                         DataPacket p = DataPacket.Create(16);
                         p.Command = (ushort)CommandID.CA_PROTO_EVENT_CANCEL;
                         p.DataType = (ushort)TypeHandling.Lookup[typeof(TType)];
-                        p.DataCount = ChannelDataCount;
+                        p.DataCount = MonitoredElements;
                         p.Parameter1 = SID;
                         p.Parameter2 = CID;
                         if (ioc != null)
@@ -146,7 +146,8 @@ namespace EpicsSharp.ChannelAccess.Client
                     t = t.GetGenericTypeDefinition().MakeGenericType(new Type[] { channelDefinedType });
             }
             p.DataType = (ushort)TypeHandling.Lookup[t];
-            p.DataCount = ChannelDataCount;
+            p.DataCount = WishedDataCount ?? ChannelDataCount;
+            MonitoredElements = (WishedDataCount ?? ChannelDataCount);
             p.Parameter1 = SID;
             p.Parameter2 = CID;
 
@@ -155,7 +156,6 @@ namespace EpicsSharp.ChannelAccess.Client
             if (ioc != null)
                 ioc.Send(p);
         }
-
         internal override void UpdateMonitor(DataPacket packet)
         {
             if (Client.Configuration.DebugTiming)
@@ -169,7 +169,7 @@ namespace EpicsSharp.ChannelAccess.Client
             RawData = packet;
             if (PrivMonitorChanged != null)
             {
-                PrivMonitorChanged(this, DecodeData<TType>(MonitoredElements));
+                PrivMonitorChanged(this, DecodeData<TType>(MonitoredElements == 0 ? packet.DataCount : MonitoredElements));
             }
             else
                 base.UpdateMonitor(packet);

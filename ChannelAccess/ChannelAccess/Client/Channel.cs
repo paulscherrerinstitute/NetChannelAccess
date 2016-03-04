@@ -96,6 +96,11 @@ namespace EpicsSharp.ChannelAccess.Client
         /// The number of elements the channel contains.
         /// </summary>
         public UInt32 ChannelDataCount { get; internal set; }
+
+        /// <summary>
+        /// If set defines how many elements will be requested on a monitor
+        /// </summary>
+        public uint? WishedDataCount { get; set; }
         /// <summary>
         /// The channel monitor mask
         /// </summary>
@@ -157,7 +162,7 @@ namespace EpicsSharp.ChannelAccess.Client
 
         internal void SendReadNotify<TType>()
         {
-            SendReadNotify<TType>(ChannelDataCount);
+            SendReadNotify<TType>(WishedDataCount ?? ChannelDataCount);
         }
 
         internal void SendReadNotify<TType>(uint nbElements)
@@ -505,7 +510,8 @@ namespace EpicsSharp.ChannelAccess.Client
                                          DataPacket p = DataPacket.Create(16 + 16);
                                          p.Command = (ushort)CommandID.CA_PROTO_EVENT_ADD;
                                          p.DataType = (ushort)TypeHandling.Lookup[MonitoredType];
-                                         p.DataCount = ChannelDataCount;
+                                         p.DataCount = WishedDataCount ?? ChannelDataCount;
+                                         MonitoredElements = (WishedDataCount ?? ChannelDataCount);
                                          p.Parameter1 = SID;
                                          p.Parameter2 = CID;
 
@@ -529,7 +535,7 @@ namespace EpicsSharp.ChannelAccess.Client
                     DataPacket p = DataPacket.Create(16);
                     p.Command = (ushort)CommandID.CA_PROTO_EVENT_CANCEL;
                     p.DataType = (ushort)TypeHandling.Lookup[MonitoredType];
-                    p.DataCount = ChannelDataCount;
+                    p.DataCount = MonitoredElements;
                     p.Parameter1 = SID;
                     p.Parameter2 = CID;
                     if (ioc != null)
@@ -670,8 +676,6 @@ namespace EpicsSharp.ChannelAccess.Client
                         if (chan != null)
                         {
                             this.ChannelDataCount = chan.ChannelDataCount;
-                            this.channelDefinedType = chan.channelDefinedType;
-                            this.ChannelDataCount = chan.ChannelDataCount;
                             this.channelDefinedType = chan.ChannelDefinedType;
                             Status = ChannelStatus.CONNECTED;
                             ConnectionEvent.Set();
@@ -795,7 +799,7 @@ namespace EpicsSharp.ChannelAccess.Client
             RawData = packet;
             if (PrivMonitorChanged != null)
             {
-                PrivMonitorChanged(this, DecodeData(MonitoredType, MonitoredElements));
+                PrivMonitorChanged(this, DecodeData(MonitoredType, MonitoredElements == 0 ? packet.DataCount : MonitoredElements));
             }
         }
 
@@ -823,7 +827,7 @@ namespace EpicsSharp.ChannelAccess.Client
                                          DataPacket p = DataPacket.Create(16 + 16);
                                          p.Command = (ushort)CommandID.CA_PROTO_EVENT_ADD;
                                          p.DataType = (ushort)TypeHandling.Lookup[MonitoredType];
-                                         p.DataCount = ChannelDataCount;
+                                         p.DataCount = MonitoredElements;
                                          p.Parameter1 = SID;
                                          p.Parameter2 = CID;
 
