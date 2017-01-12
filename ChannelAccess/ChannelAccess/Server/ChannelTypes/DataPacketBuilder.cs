@@ -11,7 +11,7 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
 {
     static class DataPacketBuilder
     {
-        static public DataPacket Encode(EpicsType type, object source, CARecord record, int nbElements=1)
+        static public DataPacket Encode(EpicsType type, object source, CARecord record, int nbElements = 1)
         {
             switch (type)
             {
@@ -57,9 +57,9 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
             return (8 - (size % 8));
         }
 
-        public static void Encode(DataPacket result, EpicsType type, int offset, object value, int nbElements = 1)        
+        public static void Encode(DataPacket result, EpicsType type, int offset, object value, int nbElements = 1)
         {
-            Type sourceType=value.GetType();
+            Type sourceType = value.GetType();
 
             switch (type)
             {
@@ -148,7 +148,7 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
                 case EpicsType.Status_String:
                 case EpicsType.Control_String:
                 case EpicsType.Display_String:
-                    result.SetDataAsString(Convert.ToString(value), offset, 40);
+                    result.SetDataAsString(Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture), offset, 40);
                     break;
                 default:
                     throw new Exception("Unsuported type");

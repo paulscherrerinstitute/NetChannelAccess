@@ -220,7 +220,7 @@ namespace EpicsSharp.ChannelAccess.Server
             switch (destTypeName)
             {
                 case "System.String":
-                    dest = Convert.ToString(obj);
+                    dest = Convert.ToString(obj, System.Globalization.CultureInfo.InvariantCulture);
                     break;
                 case "System.Int32":
                     {

@@ -550,8 +550,13 @@ namespace EpicsSharp.ChannelAccess.Client
             {
                 if (AfterAction.Count > 0)
                 {
-                    AfterAction.Add(action);
-                    return;
+                    if (ioc == null)
+                        AfterAction.Clear();
+                    else
+                    {
+                        AfterAction.Add(action);
+                        return;
+                    }
                 }
             }
 

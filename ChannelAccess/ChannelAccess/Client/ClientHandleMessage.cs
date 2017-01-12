@@ -76,7 +76,7 @@ namespace EpicsSharp.ChannelAccess.Client
                                 {
                                     channel.SetIoc(Client.GetIocConnection(new IPEndPoint(addr, port)));
                                 }
-                                catch(Exception ex)
+                                catch (Exception ex)
                                 {
                                 }
                             }
