@@ -19,6 +19,7 @@ namespace EpicsSharp.ChannelAccess.Server
         internal CARecordCollection Records { get { return records; } }
         CaServerListener listener;
         bool disposed = false;
+        public DateTime WaitTill { get; set; } = DateTime.Now.AddSeconds(5);
 
         internal List<DataPipe> tcpConnections = new List<DataPipe>();
 

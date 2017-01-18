@@ -37,6 +37,8 @@ namespace EpicsSharp.ChannelAccess.Server
         static object lockObject = new object();
         public override void ProcessData(DataPacket packet)
         {
+            if (DateTime.Now < Server.WaitTill)
+                return;
             //Console.WriteLine("Pipe " + (Pipe.FirstFilter is UdpReceiver ? "UDP" : "TCP") + ": " + ((CommandID)packet.Command));
             lock (lockObject)
             {
