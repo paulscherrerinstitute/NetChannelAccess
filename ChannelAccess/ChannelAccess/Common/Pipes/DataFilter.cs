@@ -39,8 +39,14 @@ namespace EpicsSharp.Common.Pipes
         /// <param name="packet"></param>
         public void SendData(DataPacket packet)
         {
-            if (ReceiveData != null)
-                ReceiveData(packet);
+            try
+            {
+                if (ReceiveData != null)
+                    ReceiveData(packet);
+            }
+            catch
+            {
+            }
         }
 
         public virtual void Dispose()
