@@ -30,6 +30,8 @@ namespace EpicsSharp.ChannelAccess.Server
         {
             lock (locker)
             {
+                if (channelIds.ContainsKey(channelName))
+                    return channelIds[channelName];
                 uint sid = nextSid++;
                 channelIds.Add(channelName, sid);
                 return sid;
