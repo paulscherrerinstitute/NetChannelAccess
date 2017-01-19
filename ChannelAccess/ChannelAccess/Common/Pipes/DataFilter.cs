@@ -44,7 +44,7 @@ namespace EpicsSharp.Common.Pipes
                 if (ReceiveData != null)
                     ReceiveData(packet);
             }
-            catch
+            catch(Exception ex)
             {
             }
         }
