@@ -4,7 +4,7 @@ EpicsSharp - An EPICS Channel Access library for the .NET platform.
 
 Copyright
 ---------
-Copyright (C) 2013 - 2015  Paul Scherrer Institute, Switzerland
+Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
 
 
 License
