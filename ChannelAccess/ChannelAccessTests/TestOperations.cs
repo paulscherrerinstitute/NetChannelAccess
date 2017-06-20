@@ -37,12 +37,14 @@ namespace EpicsSharp.ChannelAccess.Tests
         CAClient client;
         CADoubleRecord[] records;
 
+        const int TIMEOUT = 6000;  // 6 seconds -- server delays for 5 seconds before serving requests
+
         [TestInitialize]
         public void SetUp()
         {
             client = new CAClient();
             client.Configuration.SearchAddress = "127.0.0.1";
-            client.Configuration.WaitTimeout = 500;  // .5 seconds
+            client.Configuration.WaitTimeout = TIMEOUT;
 
             serverInit();
         }
@@ -192,14 +194,14 @@ namespace EpicsSharp.ChannelAccess.Tests
                 findValue = (double)newValue;
                 waitOne.Set();
             };
-            if (!waitOne.WaitOne(500))
+            if (!waitOne.WaitOne(TIMEOUT))
                 throw new Exception("Timeout 1");
             //records[5].Value = 2;
             findValue = 0;
             server.Dispose();
             Thread.Sleep(100);
             serverInit();
-            if (!waitOne.WaitOne(500))
+            if (!waitOne.WaitOne(TIMEOUT))
                 throw new Exception("Timeout 2");
             Assert.AreEqual(10.0, findValue);
         }

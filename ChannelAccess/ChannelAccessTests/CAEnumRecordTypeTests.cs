@@ -82,13 +82,15 @@ namespace EpicsSharp.ChannelAccess.Tests
         CAServer server;
         CAClient client;
 
+        const int TIMEOUT = 6000;  // 6 seconds -- server delays for 5 seconds before serving requests
+
         [TestInitialize]
         public void SetUp()
         {
             server = new CAServer(IPAddress.Parse("127.0.0.1"));
             client = new CAClient();
             client.Configuration.SearchAddress = "127.0.0.1";
-            client.Configuration.WaitTimeout = 500;  // .5 seconds
+            client.Configuration.WaitTimeout = TIMEOUT;
         }
 
         [TestCleanup]

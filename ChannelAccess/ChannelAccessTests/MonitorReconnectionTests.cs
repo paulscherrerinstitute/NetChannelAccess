@@ -64,22 +64,22 @@ namespace EpicsSharp.ChannelAccess.Tests
         [TestMethod]
         public void TestMonitorReconnection()
         {
-            const int MAX_WAIT = 500; // msec
+            const int MAX_WAIT = 5500;  // 5.5 seconds, as server waits 5 sec after init before responding
             // Unfortunately the problem does not always occur.
             // Let's try to repeat this test, until it breaks, for ... EVER!
             // NOTE: We need to change that later to a more useful value
             //for (long i = 1; ; i++)
-            for (long i = 1; i < 10;i++)
+            for (long i = 1; i < 10; i++)
             {
                 StartServer();
                 CAClient client = new CAClient();
-                client.Configuration.WaitTimeout = 300;
+                client.Configuration.WaitTimeout = MAX_WAIT;
                 client.Configuration.SearchAddress = "127.0.0.1";
                 var channel = client.CreateChannel<int>("SECOND");
                 channel.MonitorChanged += channel_MonitorChanged;
                 Assert.IsTrue(eventMontiorReceived.WaitOne(MAX_WAIT), "Iteration {0}: No monitor events received (check 1 of 2)", i);
                 StopServer();
-                Thread.Sleep(MAX_WAIT);
+                Thread.Sleep(200);  // give it a bit of time to settle (server is multi-threaded)
                 eventMontiorReceived.Reset();
                 Assert.IsFalse(eventMontiorReceived.WaitOne(MAX_WAIT), "Iteration {0}: Events received although server is stopped", i);
                 StartServer();
