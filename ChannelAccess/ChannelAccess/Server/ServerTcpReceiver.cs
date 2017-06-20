@@ -116,7 +116,7 @@ namespace EpicsSharp.ChannelAccess.Server
             ((TcpReceiver)this.Pipe.FirstFilter).Send(response);
 
             var lastStatus = record.AlarmStatus;
-            EventHandler newEvent = delegate(object obj, EventArgs evt)
+            EventHandler newEvent = delegate (object obj, EventArgs evt)
             {
                 if (!record.IsDirty)
                     return;
@@ -160,79 +160,12 @@ namespace EpicsSharp.ChannelAccess.Server
         {
             var record = ((ServerTcpReceiver)this.Pipe.FirstFilter).FindRecord(server, packet.Parameter1);
             var property = ((ServerTcpReceiver)this.Pipe.FirstFilter).FindProperty(server, packet.Parameter1);
-            object obj = null;
-            switch ((EpicsType)packet.DataType)
-            {
-                case EpicsType.Byte:
-                    {
-                        if (packet.DataCount == 1)
-                            obj = packet.GetByte((int)packet.HeaderSize);
-                        else
-                        {
-                            byte[] t = new byte[packet.DataCount];
-                            for (var i = 0; i < packet.DataCount; i++)
-                                t[i] = packet.GetByte((int)packet.HeaderSize + i);
-                            obj = t;
-                        }
-                    }
-                    break;
-                case EpicsType.Int:
-                    {
-                        if (packet.DataCount == 1)
-                            obj = packet.GetInt32((int)packet.HeaderSize);
-                        else
-                        {
-                            int[] t = new int[packet.DataCount];
-                            for (var i = 0; i < packet.DataCount; i++)
-                                t[i] = packet.GetInt32((int)packet.HeaderSize + i * 4);
-                            obj = t;
-                        }
-                    }
-                    break;
-                case EpicsType.Short:
-                    {
-                        if (packet.DataCount == 1)
-                            obj = packet.GetInt16((int)packet.HeaderSize);
-                        else
-                        {
-                            short[] t = new short[packet.DataCount];
-                            for (var i = 0; i < packet.DataCount; i++)
-                                t[i] = packet.GetInt16((int)packet.HeaderSize + i * 2);
-                            obj = t;
-                        }
-                    }
-                    break;
-                case EpicsType.Float:
-                    {
-                        if (packet.DataCount == 1)
-                            obj = packet.GetFloat((int)packet.HeaderSize);
-                        else
-                        {
-                            float[] t = new float[packet.DataCount];
-                            for (var i = 0; i < packet.DataCount; i++)
-                                t[i] = packet.GetFloat((int)packet.HeaderSize + i * 4);
-                            obj = t;
-                        }
-                    }
-                    break;
-                case EpicsType.Double:
-                    {
-                        if (packet.DataCount == 1)
-                            obj = packet.GetDouble((int)packet.HeaderSize);
-                        else
-                        {
-                            double[] t = new double[packet.DataCount];
-                            for (var i = 0; i < packet.DataCount; i++)
-                                t[i] = packet.GetDouble((int)packet.HeaderSize + i * 8);
-                            obj = t;
-                        }
-                    }
-                    break;
-                case EpicsType.String:
-                    obj = packet.GetDataAsString(0);
-                    break;
-            }
-            object dest = null;
+            record[property] = MapPacketValueToRecordType(packet, record, property);
+        }
+
+        private object MapPacketValueToRecordType(DataPacket packet, CARecord record, string property)
+        {
+            object obj = ExtractValueFromPacket(packet);
             Type destType = record.GetPropertyType(property);
             string destTypeName = destType.ToString();
             if (destType.IsGenericType)
@@ -240,90 +173,144 @@ namespace EpicsSharp.ChannelAccess.Server
             switch (destTypeName)
             {
                 case "System.String":
-                    dest = Convert.ToString(obj, System.Globalization.CultureInfo.InvariantCulture);
-                    break;
+                    return Convert.ToString(obj, System.Globalization.CultureInfo.InvariantCulture);
+
                 case "System.Int32":
+                    if (packet.DataCount == 1 && !destType.IsGenericType && !destType.IsArray)
                     {
-                        if (packet.DataCount == 1 && !destType.IsGenericType && !destType.IsArray)
-                        {
-                            dest = Convert.ToInt32(obj);
-                        }
-                        else
-                        {
-                            dynamic d = obj;
-                            int[] t = new int[packet.DataCount];
-                            for (var i = 0; i < packet.DataCount; i++)
-                                t[i] = Convert.ToInt32(d[i]);
-                            dest = t;
-                        }
+                        return Convert.ToInt32(obj);
                     }
-                    break;
+                    else
+                    {
+                        dynamic d = obj;
+                        int[] t = new int[packet.DataCount];
+                        for (var i = 0; i < packet.DataCount; i++)
+                            t[i] = Convert.ToInt32(d[i]);
+                        return t;
+                    }
+
                 case "System.Byte":
+                    if (packet.DataCount == 1 && !destType.IsGenericType && !destType.IsArray)
                     {
-                        if (packet.DataCount == 1 && !destType.IsGenericType && !destType.IsArray)
-                        {
-                            dest = Convert.ToByte(obj);
-                        }
-                        else
-                        {
-                            dynamic d = obj;
-                            byte[] t = new byte[packet.DataCount];
-                            for (var i = 0; i < packet.DataCount; i++)
-                                t[i] = Convert.ToByte(d[i]);
-                            dest = t;
-                        }
+                        return Convert.ToByte(obj);
                     }
-                    break;
+                    else
+                    {
+                        dynamic d = obj;
+                        byte[] t = new byte[packet.DataCount];
+                        for (var i = 0; i < packet.DataCount; i++)
+                            t[i] = Convert.ToByte(d[i]);
+                        return t;
+                    }
+
                 case "System.Int16":
+                    if (packet.DataCount == 1 && !destType.IsGenericType && !destType.IsArray)
                     {
-                        if (packet.DataCount == 1 && !destType.IsGenericType && !destType.IsArray)
-                        {
-                            dest = Convert.ToInt16(obj);
-                        }
-                        else
-                        {
-                            dynamic d = obj;
-                            short[] t = new short[packet.DataCount];
-                            for (var i = 0; i < packet.DataCount; i++)
-                                t[i] = Convert.ToInt16(d[i]);
-                            dest = t;
-                        }
+                        return Convert.ToInt16(obj);
                     }
-                    break;
+                    else
+                    {
+                        dynamic d = obj;
+                        short[] t = new short[packet.DataCount];
+                        for (var i = 0; i < packet.DataCount; i++)
+                            t[i] = Convert.ToInt16(d[i]);
+                        return t;
+                    }
+
                 case "System.Single":
+                    if (packet.DataCount == 1 && !destType.IsGenericType && !destType.IsArray)
                     {
-                        if (packet.DataCount == 1 && !destType.IsGenericType && !destType.IsArray)
-                        {
-                            dest = Convert.ToSingle(obj);
-                        }
-                        else
-                        {
-                            dynamic d = obj;
-                            float[] t = new float[packet.DataCount];
-                            for (var i = 0; i < packet.DataCount; i++)
-                                t[i] = Convert.ToSingle(d[i]);
-                            dest = t;
-                        }
+                        return Convert.ToSingle(obj);
                     }
-                    break;
+                    else
+                    {
+                        dynamic d = obj;
+                        float[] t = new float[packet.DataCount];
+                        for (var i = 0; i < packet.DataCount; i++)
+                            t[i] = Convert.ToSingle(d[i]);
+                        return t;
+                    }
+
                 case "System.Double":
+                    if (packet.DataCount == 1 && !destType.IsGenericType && !destType.IsArray)
                     {
-                        if (packet.DataCount == 1 && !destType.IsGenericType && !destType.IsArray)
-                        {
-                            dest = Convert.ToDouble(obj);
-                        }
-                        else
-                        {
-                            dynamic d = obj;
-                            double[] t = new double[packet.DataCount];
-                            for (var i = 0; i < packet.DataCount; i++)
-                                t[i] = Convert.ToDouble(d[i]);
-                            dest = t;
-                        }
+                        return Convert.ToDouble(obj);
                     }
-                    break;
+                    else
+                    {
+                        dynamic d = obj;
+                        double[] t = new double[packet.DataCount];
+                        for (var i = 0; i < packet.DataCount; i++)
+                            t[i] = Convert.ToDouble(d[i]);
+                        return t;
+                    }
             }
-            record[property] = dest;
+            throw new Exception($"Cannot map packet type {packet.DataType} to {destTypeName}");
+        }
+
+        private object ExtractValueFromPacket(DataPacket packet)
+        {
+            switch ((EpicsType)packet.DataType)
+            {
+                case EpicsType.Byte:
+                    if (packet.DataCount == 1)
+                        return packet.GetByte((int)packet.HeaderSize);
+                    else
+                    {
+                        byte[] t = new byte[packet.DataCount];
+                        for (var i = 0; i < packet.DataCount; i++)
+                            t[i] = packet.GetByte((int)packet.HeaderSize + i);
+                        return t;
+                    }
+
+                case EpicsType.Int:
+                    if (packet.DataCount == 1)
+                        return packet.GetInt32((int)packet.HeaderSize);
+                    else
+                    {
+                        int[] t = new int[packet.DataCount];
+                        for (var i = 0; i < packet.DataCount; i++)
+                            t[i] = packet.GetInt32((int)packet.HeaderSize + i * 4);
+                        return t;
+                    }
+
+                case EpicsType.Short:
+                    if (packet.DataCount == 1)
+                        return packet.GetInt16((int)packet.HeaderSize);
+                    else
+                    {
+                        short[] t = new short[packet.DataCount];
+                        for (var i = 0; i < packet.DataCount; i++)
+                            t[i] = packet.GetInt16((int)packet.HeaderSize + i * 2);
+                        return t;
+                    }
+
+                case EpicsType.Float:
+                    if (packet.DataCount == 1)
+                        return packet.GetFloat((int)packet.HeaderSize);
+                    else
+                    {
+                        float[] t = new float[packet.DataCount];
+                        for (var i = 0; i < packet.DataCount; i++)
+                            t[i] = packet.GetFloat((int)packet.HeaderSize + i * 4);
+                        return t;
+                    }
+
+                case EpicsType.Double:
+                    if (packet.DataCount == 1)
+                        return packet.GetDouble((int)packet.HeaderSize);
+                    else
+                    {
+                        double[] t = new double[packet.DataCount];
+                        for (var i = 0; i < packet.DataCount; i++)
+                            t[i] = packet.GetDouble((int)packet.HeaderSize + i * 8);
+                        return t;
+                    }
+
+                case EpicsType.String:
+                    return packet.GetDataAsString(0);
+            }
+            throw new Exception($"Data type {packet.DataType} not supported yet");
         }
 
         public override void Dispose()
