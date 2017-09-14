@@ -59,6 +59,11 @@ namespace EpicsSharp.ChannelAccess.Server
             udpPipe = DataPipe.CreateServerUdp(this, ipAddress, udpPort);
         }
 
+        public void Start()
+        {
+            this.WaitTill = DateTime.Now;
+        }
+
         public CAType CreateRecord<CAType>(string name) where CAType : CARecord
         {
             CAType result = null;
