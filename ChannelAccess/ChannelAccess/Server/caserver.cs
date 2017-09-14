@@ -61,7 +61,7 @@ namespace EpicsSharp.ChannelAccess.Server
 
         public void Start()
         {
-            this.WaitTill = DateTime.Now;
+            this.WaitTill = DateTime.Now.AddSeconds(-1);
         }
 
         public CAType CreateRecord<CAType>(string name) where CAType : CARecord

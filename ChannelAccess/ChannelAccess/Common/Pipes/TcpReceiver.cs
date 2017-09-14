@@ -122,14 +122,22 @@ namespace EpicsSharp.Common.Pipes
         internal void Send(DataPacket packet)
         {
             if (disposed)
+            {
+                //Console.WriteLine("Disposed");
                 return;
+            }
             try
             {
-                socket.Send(packet.Data);
+                lock (socket)
+                {
+                    //Console.WriteLine("Sending " + packet.MessageSize + " bytes (command " + packet.Command + ")");
+                    socket.Send(packet.Data, (int)packet.MessageSize, SocketFlags.None);
+                }
                 //Pipe.LastMessage = DateTime.Now;
             }
-            catch
+            catch(Exception ex)
             {
+                //Console.WriteLine(ex);
                 Dispose();
             }
         }

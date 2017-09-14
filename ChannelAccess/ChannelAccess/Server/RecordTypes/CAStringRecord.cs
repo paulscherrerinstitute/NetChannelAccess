@@ -25,5 +25,9 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
     public class CAStringRecord : CARecord<string>
     {
+        public CAStringRecord()
+        {
+            this.Value = "";
+        }
     }
 }
