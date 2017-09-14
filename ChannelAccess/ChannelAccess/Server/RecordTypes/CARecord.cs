@@ -545,7 +545,9 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 
         internal EpicsType FindType(string propertyName)
         {
-            Type type = this[propertyName].GetType();
+            Type type = this[propertyName]?.GetType();
+            if (type == null)
+                type = typeof(string);
 
             if (type.IsEnum)
                 return EpicsType.Enum;
