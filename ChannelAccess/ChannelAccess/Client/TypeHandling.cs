@@ -69,7 +69,15 @@ namespace EpicsSharp.ChannelAccess.Client
             {typeof(ExtControl<int>)   ,EpicsType.Control_Int},
             {typeof(ExtControl<float>) ,EpicsType.Control_Float},
             {typeof(ExtControl<double>),EpicsType.Control_Double},
-            {typeof(ExtControlEnum)    ,EpicsType.Labeled_Enum},
+            {typeof(ExtControlEnum)  ,EpicsType.Labeled_Enum},
+
+            {typeof(ExtAcknowledge<byte>) ,EpicsType.Control_Byte},
+            {typeof(ExtAcknowledge<string>),EpicsType.Control_String},
+            {typeof(ExtAcknowledge<short>) ,EpicsType.Control_Short},
+            {typeof(ExtAcknowledge<int>)   ,EpicsType.Control_Int},
+            {typeof(ExtAcknowledge<float>) ,EpicsType.Control_Float},
+            {typeof(ExtAcknowledge<double>),EpicsType.Control_Double},
+            {typeof(ExtAcknowledge<Enum>)  ,EpicsType.Labeled_Enum},
 
             // Array types
 
@@ -110,7 +118,7 @@ namespace EpicsSharp.ChannelAccess.Client
 
         static TypeHandling()
         {
-            ReverseLookup=new Dictionary<EpicsType, Type>();
+            ReverseLookup = new Dictionary<EpicsType, Type>();
             foreach (var i in Lookup)
                 if (!ReverseLookup.ContainsKey(i.Value))
                     ReverseLookup.Add(i.Value, i.Key);

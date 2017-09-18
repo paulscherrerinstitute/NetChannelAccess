@@ -59,8 +59,16 @@ namespace EpicsSharp.ChannelAccess.Client
             protected set
             {
                 status = value;
-                if (StatusChanged != null)
-                    StatusChanged(this, Status);
+                try
+                {
+                    StatusChanged?.Invoke(this, Status);                    
+                }
+                catch(Exception ex)
+                {
+
+                }
+                /*if (StatusChanged != null)
+                    StatusChanged(this, Status);*/
             }
         }
         protected CAClient Client;
