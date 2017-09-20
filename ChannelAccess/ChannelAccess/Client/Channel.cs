@@ -58,12 +58,13 @@ namespace EpicsSharp.ChannelAccess.Client
             }
             protected set
             {
+                //Console.WriteLine("New status " + value);
                 status = value;
                 try
                 {
-                    StatusChanged?.Invoke(this, Status);                    
+                    StatusChanged?.Invoke(this, Status);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
 
                 }

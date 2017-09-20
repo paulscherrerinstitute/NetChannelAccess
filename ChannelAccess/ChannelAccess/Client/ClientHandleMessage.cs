@@ -91,6 +91,7 @@ namespace EpicsSharp.ChannelAccess.Client
                         }
                     case CommandID.CA_PROTO_CREATE_CHAN:
                         {
+                            //Console.WriteLine("Received create channel");
                             Channel channel = Client.GetChannelByCid(packet.Parameter1);
                             if (channel != null)
                                 channel.SetServerChannel(packet.Parameter2, (EpicsType)packet.DataType, packet.DataCount);

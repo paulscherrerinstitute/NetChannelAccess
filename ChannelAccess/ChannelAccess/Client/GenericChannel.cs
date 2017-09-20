@@ -131,8 +131,12 @@ namespace EpicsSharp.ChannelAccess.Client
 
         void SendMonitor(Channel action)
         {
+            //Console.WriteLine("Send monitor");
             if (ChannelDataCount == 0)
+            {
+                //Console.WriteLine("Datacount == 0");
                 return;
+            }
 
             //Console.WriteLine("Sending new event add");
             DataPacket p = DataPacket.Create(16 + 16);
@@ -153,8 +157,12 @@ namespace EpicsSharp.ChannelAccess.Client
 
             p.SetUInt16(12 + 16, (ushort)MonitorMask);
 
+            //Console.WriteLine("Send monitor pre");
             if (ioc != null)
+            {
+                //Console.WriteLine("Send monitor: " + p.Parameter1 + " " + p.Parameter2);
                 ioc.Send(p);
+            }
         }
         internal override void UpdateMonitor(DataPacket packet)
         {
