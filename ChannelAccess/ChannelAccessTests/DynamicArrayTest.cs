@@ -49,6 +49,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         public void TestSubArrayGet()
         {
             record.Value.SetSubArray(9, 5);
@@ -71,6 +72,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         public void TestSubArrayMonitor()
         {
             record.Value.SetSubArray(0, 4);
@@ -93,6 +95,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         public void TestSubArrayPut()
         {
             record.Value.SetSubArray(0, 4);

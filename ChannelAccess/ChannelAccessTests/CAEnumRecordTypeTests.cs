@@ -82,7 +82,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         CAServer server;
         CAClient client;
 
-        const int TIMEOUT = 6000;  // 6 seconds -- server delays for 5 seconds before serving requests
+        const int TIMEOUT = 3000; 
 
         [TestInitialize]
         public void SetUp()
@@ -91,6 +91,7 @@ namespace EpicsSharp.ChannelAccess.Tests
             client = new CAClient();
             client.Configuration.SearchAddress = "127.0.0.1";
             client.Configuration.WaitTimeout = TIMEOUT;
+            server.Start();
         }
 
         [TestCleanup]
@@ -101,6 +102,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestGoodEnumTypes()
         {
             var recordS8 = server.CreateRecord<CAEnumRecord<GoodEnumS8>>("TESTENUMS8");
@@ -114,6 +116,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         [ExpectedException(typeof(ArgumentException))]
         public void TestTooManyValuesThrowsException()
         {
@@ -125,6 +128,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         [ExpectedException(typeof(ArgumentException))]
         public void TestTooLongNameThrowsException()
         {
@@ -136,6 +140,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         [ExpectedException(typeof(ArgumentException))]
         public void TestUnsupportedValue()
         {
@@ -147,6 +152,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestReceivingEnumAsInt()
         {
             var record = server.CreateRecord<CAEnumRecord<GoodEnumU8>>("TEST");
@@ -158,6 +164,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestReceivingEnumAsString()
         {
             var record = server.CreateRecord<CAEnumRecord<GoodEnumU8>>("TEST");
@@ -169,6 +176,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestReceivingEnumList()
         {
             var record = server.CreateRecord<CAEnumRecord<GoodEnumU8>>("TEST");

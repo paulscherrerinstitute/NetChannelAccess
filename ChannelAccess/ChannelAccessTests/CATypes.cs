@@ -37,7 +37,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         CAClient client;
         CADoubleRecord record;
 
-        const int TIMEOUT = 6000;  // 6 seconds -- server delays for 5 seconds before serving requests
+        const int TIMEOUT = 3000;     
 
         [TestInitialize]
         public void SetUp()
@@ -61,6 +61,7 @@ namespace EpicsSharp.ChannelAccess.Tests
 
             record.Value = 10;
             record.EngineeringUnits = "My";
+            server.Start();
             AutoResetEvent waitOne = new AutoResetEvent(false);
             record.RecordProcessed += delegate(object obj, EventArgs args)
             {
@@ -77,6 +78,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtControlDouble()
         {
             var c = client.CreateChannel<ExtControl<double>>("TEST:DBL");
@@ -89,6 +91,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtGraphicDouble()
         {
             var c = client.CreateChannel<ExtGraphic<double>>("TEST:DBL");
@@ -101,6 +104,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtTimeDouble()
         {
             var c = client.CreateChannel<ExtTimeType<double>>("TEST:DBL");
@@ -112,6 +116,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtDouble()
         {
             var c = client.CreateChannel<ExtType<double>>("TEST:DBL");
@@ -124,6 +129,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         //////////////////////////////////////////////
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtControlInt()
         {
             var c = client.CreateChannel<ExtControl<int>>("TEST:DBL");
@@ -136,6 +142,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtGraphicInt()
         {
             var c = client.CreateChannel<ExtGraphic<int>>("TEST:DBL");
@@ -148,6 +155,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtTimeInt()
         {
             var c = client.CreateChannel<ExtTimeType<int>>("TEST:DBL");
@@ -159,6 +167,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtInt()
         {
             var c = client.CreateChannel<ExtType<int>>("TEST:DBL");
@@ -171,6 +180,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         //////////////////////////////////////////////
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtControlFloat()
         {
             var c = client.CreateChannel<ExtControl<float>>("TEST:DBL");
@@ -183,6 +193,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtGraphicFloat()
         {
             var c = client.CreateChannel<ExtGraphic<float>>("TEST:DBL");
@@ -195,6 +206,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtTimeFloat()
         {
             var c = client.CreateChannel<ExtTimeType<float>>("TEST:DBL");
@@ -206,6 +218,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtFloat()
         {
             var c = client.CreateChannel<ExtType<float>>("TEST:DBL");
@@ -218,6 +231,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         //////////////////////////////////////////////
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtControlString()
         {
             var c = client.CreateChannel<ExtControl<string>>("TEST:DBL");
@@ -228,6 +242,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtGraphicString()
         {
             var c = client.CreateChannel<ExtGraphic<string>>("TEST:DBL");
@@ -238,6 +253,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtTimeString()
         {
             var c = client.CreateChannel<ExtTimeType<string>>("TEST:DBL");
@@ -248,6 +264,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000)]
         public void TestExtString()
         {
             var c = client.CreateChannel<ExtType<string>>("TEST:DBL");

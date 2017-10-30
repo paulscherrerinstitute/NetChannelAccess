@@ -41,6 +41,7 @@ namespace EpicsSharp.ChannelAccess.Tests
             record = server.CreateRecord<CAIntRecord>("SECOND");
             record.PrepareRecord += record_PrepareRecord;
             record.Scan = Constants.ScanAlgorithm.HZ2;
+            server.Start();
         }
 
         void record_PrepareRecord(object sender, EventArgs e)
@@ -62,9 +63,10 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(3000 * 10)]
         public void TestMonitorReconnection()
         {
-            const int MAX_WAIT = 5500;  // 5.5 seconds, as server waits 5 sec after init before responding
+            const int MAX_WAIT = 500;
             // Unfortunately the problem does not always occur.
             // Let's try to repeat this test, until it breaks, for ... EVER!
             // NOTE: We need to change that later to a more useful value

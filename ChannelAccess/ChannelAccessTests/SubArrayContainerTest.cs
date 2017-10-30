@@ -21,6 +21,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Too small INDX inappropriately allowed.")]
         public void TestTooSmallINDX()
         {
@@ -28,6 +29,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Too big INDX inappropriately allowed.")]
         public void TestTooBigINDX()
         {
@@ -35,6 +37,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Too small NELM inappropriately allowed.")]
         public void TestTooSmallNELM()
         {
@@ -42,6 +45,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Too big NELM inappropriately allowed.")]
         public void TestTooBigNELM()
         {
@@ -49,6 +53,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Too big INDX + NELM inappropriately allowed.")]
         public void TestTooBigINDX_NELM()
         {
@@ -56,6 +61,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         public void TestFullParentArray()
         {
             container.SetSubArray(0, CONTAINER_SIZE);
@@ -63,6 +69,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         public void TestPartialParentArray()
         {
             int nelm = CONTAINER_SIZE - 3;
@@ -75,6 +82,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
+        [Timeout(5000)]
         public void TestModificationEvent()
         {
             bool modified = false;
