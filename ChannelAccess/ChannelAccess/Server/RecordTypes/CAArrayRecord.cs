@@ -17,30 +17,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
-    public abstract class CAArrayRecord : CARecord
+    public abstract class CAArrayRecord : CARecord { }
+
+    public abstract class CAArrayRecord<TType> : CAArrayRecord<ArrayContainer<TType>, TType> where TType : IComparable
     {
+        public CAArrayRecord(int size) : base(size) { }
     }
 
-    public abstract class CAArrayRecord<TType> : CAArrayRecord where TType : IComparable
+    public class CAArrayRecord<TContainer, TType> : CAArrayRecord
+        where TType : IComparable
+        where TContainer : Container<TType>
     {
         /// <summary>
         /// Stores the actual value of the record
         /// </summary>
-        ArrayContainer<TType> currentValue;
+        TContainer currentValue;
 
-
-        
         /// <summary>
         /// Access the value linked to the record
         /// </summary>
         [CAField("VAL")]
-        public ArrayContainer<TType> Value
+        public TContainer Value
         {
             get
             {
@@ -75,23 +75,15 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 
         public CAArrayRecord(int size)
         {
-            //currentValue = new TType[size];
-            currentValue = new ArrayContainer<TType>(size);
-            currentValue.ArrayModified += currentValue_ArrayModified;
-            this.dataCount = size;
+            currentValue = (TContainer)Activator.CreateInstance(typeof(TContainer), new object[] { size }); ;
+            currentValue.Modified += CurrentValue_ArrayModified;
+            dataCount = size;
         }
 
-        void currentValue_ArrayModified(object sender, EventArgs e)
+        void CurrentValue_ArrayModified(object sender, ModificationEventArgs e)
         {
             IsDirty = true;
-        }
-
-        public int Length
-        {
-            get
-            {
-                return currentValue.arrayValues.Length;
-            }
+            dataCount = currentValue.Length;
         }
     }
 }

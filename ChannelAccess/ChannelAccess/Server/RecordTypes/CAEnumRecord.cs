@@ -1,5 +1,4 @@
-﻿using EpicsSharp.ChannelAccess.Constants;
-/*
+﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
  *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
@@ -18,9 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using EpicsSharp.ChannelAccess.Constants;
 
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
@@ -142,7 +139,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         TType currentValue;
 
         [CAField("VAL")]
-        public TType Value
+        public new TType Value
         {
             get
             {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChannelAccess", "ChannelAccess\ChannelAccess.csproj", "{CC7E581B-0A2D-4B9C-91E9-59F1015ACA67}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{FCD5CD65-9B89-45B5-A7C7-56A7C3ACDB7C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceCheck", "PerformanceCheck\PerformanceCheck.csproj", "{15511C42-E254-4F8D-936F-8220FE68A21B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleDynamicArray", "ExampleDynamicArrayServer\ExampleDynamicArray.csproj", "{0B714C31-06D0-4E2E-AF61-84C209F71915}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,18 +59,25 @@ Global
 		{15511C42-E254-4F8D-936F-8220FE68A21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15511C42-E254-4F8D-936F-8220FE68A21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15511C42-E254-4F8D-936F-8220FE68A21B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B714C31-06D0-4E2E-AF61-84C209F71915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B714C31-06D0-4E2E-AF61-84C209F71915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B714C31-06D0-4E2E-AF61-84C209F71915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B714C31-06D0-4E2E-AF61-84C209F71915}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C6B7403-6EB0-474E-896D-B284D010BDCF}
+	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
+		SccNumberOfProjects = 9
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://tfs.psi.ch/tfs/defaultcollection
-		SccProjectUniqueName0 = ChannelAccess\\ChannelAccess.csproj
-		SccProjectName0 = ChannelAccess
-		SccLocalPath0 = ChannelAccess
-		SccLocalPath1 = .
+		SccTeamFoundationServer = http://tfs.psi.ch:8080/tfs/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ChannelAccess\\ChannelAccess.csproj
+		SccProjectName1 = ChannelAccess
+		SccLocalPath1 = ChannelAccess
 		SccProjectUniqueName2 = ChannelAccessTests\\ChannelAccessTests.csproj
 		SccProjectName2 = ChannelAccessTests
 		SccLocalPath2 = ChannelAccessTests
@@ -87,6 +96,9 @@ Global
 		SccProjectUniqueName7 = Sandbox\\Sandbox.csproj
 		SccProjectName7 = Sandbox
 		SccLocalPath7 = Sandbox
+		SccProjectUniqueName8 = ExampleDynamicArrayServer\\ExampleDynamicArray.csproj
+		SccProjectName8 = ExampleDynamicArrayServer
+		SccLocalPath8 = ExampleDynamicArrayServer
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True

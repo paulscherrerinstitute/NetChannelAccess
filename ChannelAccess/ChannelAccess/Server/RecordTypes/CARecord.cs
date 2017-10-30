@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
 using EpicsSharp.ChannelAccess.Constants;
 using System.Globalization;
@@ -33,6 +32,13 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         public object OldValue { get; set; }
         public object NewValue { get; set; }
         public bool CancelEvent;
+    }
+
+    public class PropertyCache
+    {
+        public PropertyInfo Info { get; set; }
+
+        public bool IsContainer { get; set; }
     }
 
     /// <summary>
@@ -216,19 +222,22 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         internal int dataCount = 1;
 
         object lockProps = new object();
-        Dictionary<string, PropertyInfo> knownProps = null;
+        Dictionary<string, PropertyCache> knownProps = null;
         private void PopulateProperties()
         {
             if (knownProps != null)
                 return;
 
-            knownProps = new Dictionary<string, PropertyInfo>();
+            knownProps = new Dictionary<string, PropertyCache>();
             PropertyInfo[] props = this.GetType().GetProperties();
             foreach (var i in props)
             {
                 CAFieldAttribute attr = (CAFieldAttribute)i.GetCustomAttributes(typeof(CAFieldAttribute), true).FirstOrDefault();
                 if (attr != null)
-                    knownProps.Add(attr.Name.ToUpper(), i);
+                    knownProps.Add(attr.Name.ToUpper(), new PropertyCache() {
+                        Info = i,
+                        IsContainer = i.PropertyType.IsGenericType && i.PropertyType.BaseType.GetGenericTypeDefinition() == typeof(Container<>)
+                    });
             }
         }
 
@@ -241,7 +250,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
                     PopulateProperties();
                     if (!knownProps.ContainsKey(key.ToUpper()))
                         return null;
-                    return knownProps[key.ToUpper()].GetValue(this, null);
+                    return knownProps[key.ToUpper()].Info.GetValue(this, null);
                 }
             }
             set
@@ -263,9 +272,9 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
                         }
                     }
 
-                    if (knownProps[key.ToUpper()].PropertyType.IsArray || knownProps[key.ToUpper()].PropertyType.IsGenericType)
+                    if (knownProps[key.ToUpper()].Info.PropertyType.IsArray || knownProps[key.ToUpper()].Info.PropertyType.IsGenericType)
                     {
-                        int nb = Math.Min(((dynamic)(knownProps[key.ToUpper()].GetValue(this,null))).Length, ((Array)value).Length);
+                        int nb = Math.Min(((dynamic)(knownProps[key.ToUpper()].Info.GetValue(this, null))).Length, ((Array)value).Length);
                         for (int i = 0; i < nb; i++)
                             SetArrayValue(key, i, ((dynamic)value)[i]);
                         /*for (int i = 0; i < nb; i++)
@@ -273,7 +282,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
                     }
                     else
                     {
-                        knownProps[key.ToUpper()].SetValue(this, value, null);
+                        knownProps[key.ToUpper()].Info.SetValue(this, value, null);
                     }
                 }
             }
@@ -306,12 +315,13 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
                 PopulateProperties();
                 if (!knownProps.ContainsKey(key.ToUpper()))
                     return;
-                Type t = knownProps[key.ToUpper()].PropertyType;
-                if (t.Name.Split('`')[0] == "ArrayContainer")
+                var cache = knownProps[key.ToUpper()];
+                Type t = cache.Info.PropertyType;
+                if (cache.IsContainer)
                     t = t.GetGenericArguments().First();
                 else
                     t = t.GetElementType();
-                dynamic arr = (dynamic)knownProps[key.ToUpper()].GetValue(this, null);
+                dynamic arr = (dynamic)knownProps[key.ToUpper()].Info.GetValue(this, null);
                 switch (t.Name)
                 {
                     case "Byte":
@@ -358,7 +368,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
                 PopulateProperties();
                 if (!knownProps.ContainsKey(key.ToUpper()))
                     return null;
-                return knownProps[key.ToUpper()].PropertyType;
+                return knownProps[key.ToUpper()].Info.PropertyType;
             }
         }
 
@@ -545,40 +555,48 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 
         internal EpicsType FindType(string propertyName)
         {
-            Type type = this[propertyName]?.GetType();
-            if (type == null)
-                type = typeof(string);
-
-            if (type.IsEnum)
-                return EpicsType.Enum;
-            string name;
-            if (type.IsGenericType && type.Name.Split(new char[] { '`' })[0] == "ArrayContainer")
-                name = type.GetGenericArguments()[0].Name;
-            else if (type.IsArray)
-                name = type.GetElementType().Name;
-            else
-                name = type.Name;
-
-            switch (name)
+            lock (lockProps)
             {
-                case "Short":
-                    return EpicsType.Short;
-                case "Double":
-                    return EpicsType.Double;
-                case "Int32":
-                    return EpicsType.Int;
-                case "Single":
-                case "Float":
-                    return EpicsType.Float;
-                case "String":
-                    return EpicsType.String;
-                case "Int16":
-                    return EpicsType.Short;
-                case "Byte":
-                    return EpicsType.Byte;
-                default:
-                    Console.WriteLine("Unkown type " + type.Name);
+                PopulateProperties();
+                if (!knownProps.ContainsKey(propertyName.ToUpper()))
+                {
+                    Console.WriteLine($"Unknown property: {propertyName}");
                     return EpicsType.Invalid;
+                }
+                var cache = knownProps[propertyName.ToUpper()];
+                Type type = cache.Info.PropertyType;
+
+                if (type.IsEnum)
+                    return EpicsType.Enum;
+                string name;
+                if (cache.IsContainer)
+                    name = type.GetGenericArguments()[0].Name;
+                else if (type.IsArray)
+                    name = type.GetElementType().Name;
+                else
+                    name = type.Name;
+
+                switch (name)
+                {
+                    case "Short":
+                        return EpicsType.Short;
+                    case "Double":
+                        return EpicsType.Double;
+                    case "Int32":
+                        return EpicsType.Int;
+                    case "Single":
+                    case "Float":
+                        return EpicsType.Float;
+                    case "String":
+                        return EpicsType.String;
+                    case "Int16":
+                        return EpicsType.Short;
+                    case "Byte":
+                        return EpicsType.Byte;
+                    default:
+                        Console.WriteLine("Unknown type " + type.Name);
+                        return EpicsType.Invalid;
+                }
             }
         }
     }

@@ -100,8 +100,9 @@ namespace EpicsSharp.ChannelAccess.Server
                         break;
                     case CommandID.CA_PROTO_READ_NOTIFY:
                         {
+                            var record = ((ServerTcpReceiver)this.Pipe.FirstFilter).FindRecord(this.Server, packet.Parameter1);
                             DataPacket response = DataPacketBuilder.Encode((EpicsType)packet.DataType, ((ServerTcpReceiver)this.Pipe.FirstFilter).RecordValue(this.Server, packet.Parameter1),
-                                 ((ServerTcpReceiver)this.Pipe.FirstFilter).FindRecord(this.Server, packet.Parameter1), (int)packet.DataCount);
+                                record, ((int)packet.DataCount == 0 ? record.dataCount : (int)packet.DataCount));
                             response.Command = (ushort)CommandID.CA_PROTO_READ_NOTIFY;
                             response.Parameter1 = 1;
                             response.Parameter2 = packet.Parameter2;
@@ -133,7 +134,7 @@ namespace EpicsSharp.ChannelAccess.Server
                             uint dataCount = packet.DataCount;
                             EpicsType type = (EpicsType)packet.DataType;
 
-                            ((ServerTcpReceiver)this.Pipe.FirstFilter).RegisterEvent(this.Server, sid, subscriptionId, (int)dataCount, type, (MonitorMask)packet.GetUInt16((int)packet.HeaderSize+12));
+                            ((ServerTcpReceiver)this.Pipe.FirstFilter).RegisterEvent(this.Server, sid, subscriptionId, (int)dataCount, type, (MonitorMask)packet.GetUInt16((int)packet.HeaderSize + 12));
                         }
                         break;
                     case CommandID.CA_PROTO_EVENT_CANCEL:

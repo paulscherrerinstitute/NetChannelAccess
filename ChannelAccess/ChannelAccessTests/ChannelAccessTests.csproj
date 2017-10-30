@@ -59,6 +59,8 @@
     <Compile Include="CATypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestOperations.cs" />
+    <Compile Include="DynamicArrayTest.cs" />
+    <Compile Include="SubArrayContainerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChannelAccess\ChannelAccess.csproj">

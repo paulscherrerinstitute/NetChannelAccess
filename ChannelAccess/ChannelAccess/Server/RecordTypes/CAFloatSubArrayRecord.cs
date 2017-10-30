@@ -16,20 +16,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace EpicsSharp.ChannelAccess.Constants
+namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
-    internal enum CAConstants : ushort
+    public class CAFloatSubArrayRecord : CASubArrayRecord<float>
     {
-        DO_REPLY = 10,
-        DONT_REPLY = 5,
-        /// <summary>
-        /// Minor revision of channel access protocol implemented in this library
-        /// </summary>
-        CA_MINOR_PROTOCOL_REVISION = 13
+        public CAFloatSubArrayRecord(int size) : base(size) { }
     }
 }

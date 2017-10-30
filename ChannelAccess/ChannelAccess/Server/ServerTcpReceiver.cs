@@ -103,13 +103,13 @@ namespace EpicsSharp.ChannelAccess.Server
             return server.Records[channelName][property];
         }
 
-        internal void RegisterEvent(CAServer server, uint sid, uint subscriptionId, int dataCount, Constants.EpicsType type, MonitorMask mask)
+        internal void RegisterEvent(CAServer server, uint sid, uint subscriptionId, int dataCount, EpicsType type, MonitorMask mask)
         {
 
             CARecord record = ((ServerTcpReceiver)this.Pipe.FirstFilter).FindRecord(server, sid);
             string property = ((ServerTcpReceiver)this.Pipe.FirstFilter).FindProperty(server, sid);
 
-            DataPacket response = DataPacketBuilder.Encode(type, record[property], record, dataCount);
+            DataPacket response = DataPacketBuilder.Encode(type, record[property], record, (dataCount == 0) ? record.dataCount : Math.Min(dataCount, record.dataCount));
             response.Command = (ushort)CommandID.CA_PROTO_EVENT_ADD;
             response.Parameter1 = 1;
             response.Parameter2 = (uint)subscriptionId;
@@ -124,7 +124,7 @@ namespace EpicsSharp.ChannelAccess.Server
                 if (mask == MonitorMask.ALARM && lastStatus == record.AlarmStatus)
                     return;
                 lastStatus = record.AlarmStatus;
-                DataPacket p = DataPacketBuilder.Encode(type, record[property], record, dataCount);
+                DataPacket p = DataPacketBuilder.Encode(type, record[property], record, (dataCount == 0) ? record.dataCount : Math.Min(dataCount, record.dataCount));
                 p.Command = (ushort)CommandID.CA_PROTO_EVENT_ADD;
                 p.Parameter1 = 1;
                 p.Parameter2 = (uint)subscriptionId;

@@ -224,13 +224,14 @@ namespace EpicsSharp.ChannelAccess.Client
             HasValue = false;
             WaitConnection();
 
-            SendReadNotify<TType>(nbElements == 0 ? this.ChannelDataCount : nbElements);
+            //SendReadNotify<TType>(nbElements == 0 ? this.ChannelDataCount : nbElements);
+            SendReadNotify<TType>(nbElements);
 
             if (GetAnswerEvent.WaitOne(Client.Configuration.WaitTimeout) == false)
                 throw new Exception("Read Notify timeout.");
 
             if (nbElements == 0)
-                return DecodeData<TType>(this.ChannelDataCount);
+                return DecodeData<TType>(RawData.DataCount);
             return DecodeData<TType>(nbElements);
         }
 
