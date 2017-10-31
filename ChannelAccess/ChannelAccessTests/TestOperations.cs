@@ -171,7 +171,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
-        [Timeout(3000)]
+        [Timeout(10000)]
         public void MonitorSequence()
         {
             var channel = client.CreateChannel("TEST:DBL:5");
@@ -193,7 +193,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
-        [Timeout(3000 * 2)]
+        [Timeout(12000)]
         public void DisconnectReconnect()
         {
             var channel = client.CreateChannel("TEST:DBL:5");
