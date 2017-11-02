@@ -17,11 +17,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
 
-    public class ArrayContainer<TType> : Container<TType> where TType : IComparable
+    public class ArrayContainer<TType> : Container<TType>, IEnumerable<TType> where TType : IComparable
     {
         /// <summary>
         /// The modification event
@@ -72,5 +74,15 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
             }
         }
 
+        public IEnumerator<TType> GetEnumerator()
+        {
+            foreach (var i in values)
+                yield return i;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return values.GetEnumerator();
+        }
     }
 }

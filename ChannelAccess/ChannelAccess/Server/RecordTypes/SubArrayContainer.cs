@@ -17,6 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
@@ -117,5 +119,16 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
             }
         }
 
+        public IEnumerator<TType> GetEnumerator()
+        {
+            for(var i=this.INDX;i < this.INDX+this.NELM;i++)
+                yield return Data[i];
+        }
+
+        /*IEnumerator IEnumerable.GetEnumerator()
+        {
+            for (var i = this.INDX; i < this.INDX + this.NELM; i++)
+                yield return Data[i];
+        }*/
     }
 }
