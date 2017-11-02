@@ -119,9 +119,9 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
             }
         }
 
-        public IEnumerator<TType> GetEnumerator()
+        public override IEnumerator<TType> GetEnumerator()
         {
-            for(var i=this.INDX;i < this.INDX+this.NELM;i++)
+            for (var i = this.INDX; i < this.INDX + this.NELM; i++)
                 yield return Data[i];
         }
 

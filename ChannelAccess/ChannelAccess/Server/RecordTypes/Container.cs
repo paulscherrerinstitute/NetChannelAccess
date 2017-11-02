@@ -17,6 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
@@ -24,7 +26,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
     /// Define the capabilities of a container
     /// </summary>
     /// <typeparam name="TType">The type that the container holds</typeparam>
-    public abstract class Container<TType>
+    public abstract class Container<TType>: IEnumerable<TType>
     {
         /// <summary>
         /// The event that gets called of elements are modified
@@ -42,6 +44,13 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         /// <param name="key">The index</param>
         /// <returns>The element</returns>
         public abstract TType this[int key] { get; set; }
+
+        public abstract IEnumerator<TType> GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
     }
 
     /// <summary>

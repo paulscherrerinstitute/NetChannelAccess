@@ -17,6 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
@@ -27,7 +29,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         public CAArrayRecord(int size) : base(size) { }
     }
 
-    public class CAArrayRecord<TContainer, TType> : CAArrayRecord
+    public class CAArrayRecord<TContainer, TType> : CAArrayRecord, IEnumerable<TType>
         where TType : IComparable
         where TContainer : Container<TType>
     {
@@ -35,6 +37,17 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         /// Stores the actual value of the record
         /// </summary>
         TContainer currentValue;
+
+
+        public IEnumerator<TType> GetEnumerator()
+        {
+            return this.currentValue.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Access the value linked to the record
