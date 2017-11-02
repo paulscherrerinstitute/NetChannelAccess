@@ -122,7 +122,7 @@ namespace EpicsSharp.ChannelAccess.Tests
             c.Put<double>(50);
             Assert.AreEqual(50, records[5].Value);
             AutoResetEvent waitOne = new AutoResetEvent(false);
-            records[5].RecordProcessed += delegate(object obj, EventArgs args)
+            records[5].RecordProcessed += delegate (object obj, EventArgs args)
             {
                 waitOne.Set();
             };
@@ -161,7 +161,7 @@ namespace EpicsSharp.ChannelAccess.Tests
             var channel = client.CreateChannel("TEST:DBL:5");
             AutoResetEvent waitOne = new AutoResetEvent(false);
             double findValue = 0;
-            channel.MonitorChanged += delegate(Channel sender, object newValue)
+            channel.MonitorChanged += delegate (Channel sender, object newValue)
             {
                 findValue = (double)newValue;
                 waitOne.Set();
@@ -177,7 +177,7 @@ namespace EpicsSharp.ChannelAccess.Tests
             var channel = client.CreateChannel("TEST:DBL:5");
             AutoResetEvent waitOne = new AutoResetEvent(false);
             double findValue = 0;
-            channel.MonitorChanged += delegate(Channel sender, object newValue)
+            channel.MonitorChanged += delegate (Channel sender, object newValue)
             {
                 findValue = (double)newValue;
                 waitOne.Set();
@@ -199,7 +199,7 @@ namespace EpicsSharp.ChannelAccess.Tests
             var channel = client.CreateChannel("TEST:DBL:5");
             AutoResetEvent waitOne = new AutoResetEvent(false);
             double findValue = 0;
-            channel.MonitorChanged += delegate(Channel sender, object newValue)
+            channel.MonitorChanged += delegate (Channel sender, object newValue)
             {
                 findValue = (double)newValue;
                 waitOne.Set();
@@ -214,6 +214,16 @@ namespace EpicsSharp.ChannelAccess.Tests
             if (!waitOne.WaitOne(TIMEOUT))
                 throw new Exception("Timeout 2");
             Assert.AreEqual(10.0, findValue);
+        }
+
+        [TestMethod]
+        public void TestArrayEnumerator()
+        {
+            var arr = server.CreateArrayRecord<CAIntSubArrayRecord>("ZZZ", 20);
+            foreach (var i in arr)
+            {
+
+            }
         }
     }
 }

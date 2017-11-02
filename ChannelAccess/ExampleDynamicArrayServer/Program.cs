@@ -20,6 +20,7 @@ using EpicsSharp.ChannelAccess.Client;
 using EpicsSharp.ChannelAccess.Server;
 using EpicsSharp.ChannelAccess.Server.RecordTypes;
 using System;
+using System.Threading;
 
 namespace ExampleDynamicArray
 {
@@ -33,6 +34,60 @@ namespace ExampleDynamicArray
         public static void Main(string[] args)
         {
             using (var server = new CAServer())
+            {
+                using (var client = new CAClient())
+                {
+                    var dynArrChannel = server.CreateArrayRecord<CAIntSubArrayRecord>("MPC2000:DYNARR", 20);
+                    for (var i = 0; i < 20; i++)
+                    {
+                        dynArrChannel.Value.Data[i] = i;
+                    }
+                    server.Start();
+
+                    var autoEvt = new AutoResetEvent(false);
+
+                    var clientChannel = client.CreateChannel<int[]>("MPC2000:DYNARR");
+                    clientChannel.WishedDataCount = 0;
+                    clientChannel.MonitorChanged += (s, v) =>
+                    {
+                        Console.WriteLine($"ClientArray(length={v.Length}): {string.Join(", ", v)}");
+                        autoEvt.Set();
+                    };
+
+                    autoEvt.WaitOne();
+
+                    dynArrChannel.Value.SetSubArray(0, 3);
+
+                    autoEvt.WaitOne();
+
+                    dynArrChannel.Value.SetSubArray(1, 3);
+
+                    autoEvt.WaitOne();
+
+                    dynArrChannel.Value.SetSubArray(2, 4);
+
+                    /*// Fill array
+                    for (var i = 0; i < 20; i++)
+                    {
+                        dynArrChannel.Value.Data[i] = i;
+                    }
+                    dynArrChannel.Value.SetSubArray(0, 10);
+
+                    // Shift subarray position and length every 2 seconds
+                    var counter = 0;
+                    dynArrChannel.PrepareRecord += (s, e) =>
+                    {
+                        counter++;
+                        counter = counter > 5 ? 0 : counter;
+                        dynArrChannel.Value.SetSubArray(counter, 10 + counter);
+                    };*/
+
+
+                    Console.ReadKey();
+                }
+            }
+
+            /*using (var server = new CAServer())
             {
                 var dynArrChannel = server.CreateArrayRecord<CAIntSubArrayRecord>("MPC2000:DYNARR", 20);
                 dynArrChannel.Scan = EpicsSharp.ChannelAccess.Constants.ScanAlgorithm.SEC1;
@@ -66,7 +121,7 @@ namespace ExampleDynamicArray
 
                     Console.ReadKey();
                 }
-            }
+            }*/
         }
     }
 }
