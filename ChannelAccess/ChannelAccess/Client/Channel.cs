@@ -865,7 +865,17 @@ namespace EpicsSharp.ChannelAccess.Client
             lock (Client.Channels)
                 Client.Channels.Remove(this.CID);
             if (ioc != null)
-                ioc.RemoveChannel(this);
+            {
+                DataPacket p = DataPacket.Create(16);
+                p.Command = (ushort)CommandID.CA_PROTO_CLEAR_CHANNEL;
+                p.DataType = 0;
+                p.DataCount = 0;
+                p.Parameter1 = SID;
+                p.Parameter2 = CID;
+                ioc?.Send(p);
+
+                ioc?.RemoveChannel(this);
+            }
             Client.Searcher.Remove(this);
             Status = ChannelStatus.DISPOSED;
         }
