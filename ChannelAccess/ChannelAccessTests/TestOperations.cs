@@ -171,7 +171,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
-        [Timeout(10000)]
+        [Timeout(20000)]
         public void MonitorSequence()
         {
             var channel = client.CreateChannel("TEST:DBL:5");
@@ -180,6 +180,7 @@ namespace EpicsSharp.ChannelAccess.Tests
             channel.MonitorChanged += delegate (Channel sender, object newValue)
             {
                 findValue = (double)newValue;
+                Console.WriteLine("Got " + newValue);
                 waitOne.Set();
             };
             waitOne.WaitOne();
