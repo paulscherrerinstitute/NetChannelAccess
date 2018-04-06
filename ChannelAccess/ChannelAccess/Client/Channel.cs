@@ -633,6 +633,15 @@ namespace EpicsSharp.ChannelAccess.Client
 
         protected bool WaitConnectionResult()
         {
+            if (Client.Configuration.DebugTiming)
+            {
+                lock (ElapsedTimings)
+                {
+                    ElapsedTimings.Clear();
+                    Stopwatch.Start();
+                }
+            }
+
             lock (ConnectionLock)
             {
                 if (Status == ChannelStatus.CONNECTED)
@@ -641,15 +650,6 @@ namespace EpicsSharp.ChannelAccess.Client
                 {
                     //Console.WriteLine("Need to connect");
                     SendSearch();
-                }
-            }
-
-            if (Client.Configuration.DebugTiming)
-            {
-                lock (ElapsedTimings)
-                {
-                    ElapsedTimings.Clear();
-                    Stopwatch.Start();
                 }
             }
 

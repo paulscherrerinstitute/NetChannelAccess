@@ -94,6 +94,12 @@ namespace EpicsSharp.ChannelAccess.Client
                             c.SearchInverval = 10;
                         c.SearchInvervalCounter = c.SearchInverval;
 
+                        lock (c.ElapsedTimings)
+                        {
+                            if (!c.ElapsedTimings.ContainsKey("FirstSearch"))
+                                c.ElapsedTimings.Add("FirstSearch", c.Stopwatch.Elapsed);
+                        }
+
                         mem.Write(c.SearchPacket.Data, 0, c.SearchPacket.Data.Length);
                         if (mem.Length > 1400)
                         {
@@ -105,6 +111,7 @@ namespace EpicsSharp.ChannelAccess.Client
                 }
                 if (mem.Position != 0)
                     SendBuffer(mem.ToArray());
+                mem.Dispose();
             }
         }
 
