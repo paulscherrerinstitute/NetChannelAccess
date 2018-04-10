@@ -38,7 +38,7 @@ namespace EpicsSharp.ChannelAccess.Client
         internal Dictionary<uint, Channel> Channels = new Dictionary<uint, Channel>();
         internal Dictionary<IPEndPoint, DataPipe> Iocs = new Dictionary<IPEndPoint, DataPipe>();
         private bool disposed = false;
-        internal Searcher Searcher;        
+        internal Searcher Searcher;
 
         readonly Thread echoThread;
 
@@ -58,20 +58,26 @@ namespace EpicsSharp.ChannelAccess.Client
         {
             while (!disposed)
             {
-                Thread.Sleep(10000);
+                Thread.Sleep(Configuration.EchoSleeping);
                 List<TcpReceiver> toEcho;
                 lock (Iocs)
                 {
                     DateTime now = DateTime.Now;
-                    toEcho=Iocs.Values.Where(row => (row.LastMessage - now).TotalSeconds > 20).Select(row => (TcpReceiver)row[0]).ToList();
+                    toEcho = Iocs.Values.Where(row => (row.LastMessage - now).TotalSeconds > Configuration.EchoInterval).Select(row => (TcpReceiver)row[0]).ToList();
                     toEcho = Iocs.Select(row => (TcpReceiver)row.Value[0]).ToList();
                 }
                 foreach (var i in toEcho)
                 {
-                    if(i.Pipe.GeneratedEcho == true)
+                    if (i.Pipe.GeneratedEcho == true)
+                    {
+                        //Console.WriteLine("Double echo? Dispose");
                         i.Dispose();
+                    }
                     else
+                    {
+                        //Console.WriteLine("Sending echo");
                         i.Echo();
+                    }
                 }
             }
         }
@@ -155,7 +161,7 @@ namespace EpicsSharp.ChannelAccess.Client
                     {
                         c.HasValue = false;
                         c.AfterReadNotify += MultiGetAfterReadNotify;
-                        if(c.Status == ChannelStatus.CONNECTED)
+                        if (c.Status == ChannelStatus.CONNECTED)
                             c.SendReadNotify<TType>();
                         else
                             c.AfterConnect(e => e.SendReadNotify<TType>());
@@ -166,7 +172,7 @@ namespace EpicsSharp.ChannelAccess.Client
 
                 return channels.Select(row => row.HasValue ? (object)row.DecodeData<TType>(1) : null).ToArray();
             }
-            return new object[] {};
+            return new object[] { };
         }
 
         void MultiGetAfterReadNotify(Channel sender, object newValue)
@@ -196,13 +202,18 @@ namespace EpicsSharp.ChannelAccess.Client
             DataPipe ioc;
             lock (Iocs)
             {
+                //Console.WriteLine("Getting IOC for " + iPEndPoint.ToString());
                 if (!Iocs.ContainsKey(iPEndPoint))
                 {
+                    //Console.WriteLine("Creating new TCP");
                     ioc = DataPipe.CreateClientTcp(this, iPEndPoint);
                     Iocs.Add(iPEndPoint, ioc);
                 }
                 else
+                {
+                    //Console.WriteLine("Re-using TCP");
                     ioc = Iocs[iPEndPoint];
+                }
             }
             return ioc;
         }

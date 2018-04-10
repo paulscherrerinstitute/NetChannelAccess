@@ -79,7 +79,7 @@ namespace EpicsSharp.Common.Pipes
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                //Console.WriteLine(ex.ToString());
             }
         }
 

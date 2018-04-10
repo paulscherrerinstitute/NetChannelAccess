@@ -560,7 +560,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
                 PopulateProperties();
                 if (!knownProps.ContainsKey(propertyName.ToUpper()))
                 {
-                    Console.WriteLine($"Unknown property: {propertyName}");
+                    //Console.WriteLine($"Unknown property: {propertyName}");
                     return EpicsType.Invalid;
                 }
                 var cache = knownProps[propertyName.ToUpper()];
@@ -594,7 +594,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
                     case "Byte":
                         return EpicsType.Byte;
                     default:
-                        Console.WriteLine("Unknown type " + type.Name);
+                        //Console.WriteLine("Unknown type " + type.Name);
                         return EpicsType.Invalid;
                 }
             }

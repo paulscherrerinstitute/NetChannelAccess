@@ -40,5 +40,6 @@ namespace EpicsSharp.ChannelAccess.Constants
         //     try to reconnect automaticly
         DISCONNECTED = 2,
         DISPOSED=3,
+        CONNECTING = 4,
     }
 }

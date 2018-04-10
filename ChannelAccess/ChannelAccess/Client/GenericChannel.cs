@@ -116,6 +116,7 @@ namespace EpicsSharp.ChannelAccess.Client
                 return;
             if (ioc != null)
                 ioc.RemoveChannel(this);
+            //Console.WriteLine("Channel disconnected");
             lock (ConnectionLock)
             {
                 Status = ChannelStatus.DISCONNECTED;

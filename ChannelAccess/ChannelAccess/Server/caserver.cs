@@ -44,6 +44,7 @@ namespace EpicsSharp.ChannelAccess.Server
         public int TcpPort { get; private set; }
         public int UdpPort { get; private set; }
         public int BeaconPort { get; private set; }
+        public bool AcceptConnections { get; set; } = true;
 
         public CAServer(IPAddress ipAddress = null, int tcpPort = 5064, int udpPort = 5064, int beaconPort = 0)
         {

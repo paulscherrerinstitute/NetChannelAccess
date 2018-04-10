@@ -59,6 +59,8 @@ namespace EpicsSharp.ChannelAccess.Client
             protected set
             {
                 //Console.WriteLine("New status " + value);
+                if (status == value)
+                    return;
                 status = value;
                 try
                 {
@@ -556,7 +558,7 @@ namespace EpicsSharp.ChannelAccess.Client
 
         internal void AfterConnect(Action<Channel> action)
         {
-            lock (AfterAction)
+            /*lock (AfterAction)
             {
                 if (AfterAction.Count > 0)
                 {
@@ -568,7 +570,7 @@ namespace EpicsSharp.ChannelAccess.Client
                         return;
                     }
                 }
-            }
+            }*/
 
             //Console.WriteLine("Add after connect");
             if (Client.Configuration.DebugTiming)
@@ -592,18 +594,23 @@ namespace EpicsSharp.ChannelAccess.Client
             }
             lock (AfterAction)
             {
-                AfterAction.Add(action);
-                this.StatusChanged += AfterActionStatusChanged;
+                if (!AfterAction.Contains(action))
+                    AfterAction.Add(action);
+                var delegates = this.StatusChanged?.GetInvocationList().Cast<ChannelStatusDelegate>();
+                if (delegates == null || !delegates.Contains(AfterConnectedStatusChanged))
+                    this.StatusChanged += AfterConnectedStatusChanged;
             }
         }
 
-        void AfterActionStatusChanged(Channel sender, ChannelStatus newStatus)
+        void AfterConnectedStatusChanged(Channel sender, ChannelStatus newStatus)
         {
+            if (newStatus != ChannelStatus.CONNECTED)
+                return;
             List<Action<Channel>> todo = new List<Action<Channel>>();
             lock (AfterAction)
             {
                 //Console.WriteLine("After Action AlarmStatus Changed");
-                this.StatusChanged -= AfterActionStatusChanged;
+                this.StatusChanged -= AfterConnectedStatusChanged;
                 if (Disposed)
                     return;
                 if (AfterAction == null)
@@ -728,6 +735,7 @@ namespace EpicsSharp.ChannelAccess.Client
             packet.Parameter1 = cid;
             packet.Parameter2 = (uint)CAConstants.CA_MINOR_PROTOCOL_REVISION;
             packet.SetDataAsString(ChannelName);
+            //Status = ChannelStatus.CONNECTING;
 
             if (ioc != null)
                 ioc.Send(packet);

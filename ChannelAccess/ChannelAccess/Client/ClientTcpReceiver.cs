@@ -104,6 +104,12 @@ namespace EpicsSharp.ChannelAccess.Client
             lock (ConnectedChannels)
             {
                 ConnectedChannels.Remove(channel);
+                if (ConnectedChannels.Count == 0)
+                {
+                    lock (Client.Iocs)
+                        Client.Iocs.Remove(destination);
+                    base.Dispose();
+                }
             }
 
             lock (Client.Channels)
@@ -111,6 +117,7 @@ namespace EpicsSharp.ChannelAccess.Client
                 if (!Client.Channels.Any(row => row.Value.ChannelName == channel.ChannelName))
                     ChannelSID.Remove(channel.ChannelName);
             }
+
         }
 
         public override void Dispose()

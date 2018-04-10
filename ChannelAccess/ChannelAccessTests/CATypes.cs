@@ -37,7 +37,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         CAClient client;
         CADoubleRecord record;
 
-        const int TIMEOUT = 3000;     
+        const int TIMEOUT = 3000;
 
         [TestInitialize]
         public void SetUp()
@@ -63,7 +63,7 @@ namespace EpicsSharp.ChannelAccess.Tests
             record.EngineeringUnits = "My";
             server.Start();
             AutoResetEvent waitOne = new AutoResetEvent(false);
-            record.RecordProcessed += delegate(object obj, EventArgs args)
+            record.RecordProcessed += delegate (object obj, EventArgs args)
             {
                 waitOne.Set();
             };
@@ -269,6 +269,39 @@ namespace EpicsSharp.ChannelAccess.Tests
         {
             var c = client.CreateChannel<ExtType<string>>("TEST:DBL");
             var r = c.Get();
+
+            Assert.AreEqual(r.Value, "10");
+            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
+        }
+
+        [TestMethod]
+        [Timeout(5000)]
+        public void TestAnswerToSearchAndMissConnect()
+        {
+            server.AcceptConnections = false;
+            client.Configuration.EchoInterval = 0.5;
+            client.Configuration.EchoSleeping = 2000;
+
+            var c = client.CreateChannel<ExtType<string>>("TEST:DBL");
+            ExtType<string> r = null;
+
+            client.Configuration.WaitTimeout = 1000;
+            AutoResetEvent waitOne = new AutoResetEvent(false);
+            c.MonitorChanged += (chan, val) =>
+            {
+                r = val;
+                waitOne.Set();
+                //Console.WriteLine("Got " + val.Value);
+            };
+
+            if (waitOne.WaitOne(1000) == true)
+                Assert.Fail("Recevied data");
+
+            server.AcceptConnections = true;
+            //Console.WriteLine("====== Now should accept ======");
+            //Thread.Sleep(30000);
+            if (!waitOne.WaitOne(8000))
+                Assert.Fail("Never received data");
 
             Assert.AreEqual(r.Value, "10");
             Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);

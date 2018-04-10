@@ -73,6 +73,23 @@ namespace EpicsSharp.ChannelAccess.Server
             {
                 listener = (TcpListener)result.AsyncState;
                 client = listener.EndAcceptSocket(result);
+                //Console.WriteLine("!!! Received TCP connection");
+
+                if (server.AcceptConnections == false)
+                {
+                    client.Shutdown(SocketShutdown.Both);
+                    client.Close();
+                    try
+                    {
+                        listener.BeginAcceptSocket(new AsyncCallback(ReceiveConn), listener);
+                    }
+                    catch
+                    {
+                        if (!disposed)
+                            Rebuild();
+                    }
+                    return;
+                }
 
                 client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
             }

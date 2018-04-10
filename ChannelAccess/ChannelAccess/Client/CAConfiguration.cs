@@ -103,5 +103,8 @@ namespace EpicsSharp.ChannelAccess.Client
                 SearchAddresses = ips.ToArray();
             }
         }
+
+        public double EchoInterval { get; set; } = 20;
+        public int EchoSleeping { get; set; } = 1000;
     }
 }

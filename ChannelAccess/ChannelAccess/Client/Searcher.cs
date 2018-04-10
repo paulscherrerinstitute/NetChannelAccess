@@ -48,10 +48,13 @@ namespace EpicsSharp.ChannelAccess.Client
         {
             lock (toSearch)
             {
-                channel.SearchInvervalCounter = channel.SearchInverval = 1;
 
                 if (!toSearch.Contains(channel))
+                {
+                    //Console.WriteLine("Starting the search for " + channel.ChannelName);
+                    channel.SearchInvervalCounter = channel.SearchInverval = 1;
                     toSearch.Add(channel);
+                }
             }
         }
 
@@ -87,7 +90,7 @@ namespace EpicsSharp.ChannelAccess.Client
                     foreach (Channel c in toSearch.Where(row => row.SearchInvervalCounter <= 0
                         && row.Status != Constants.ChannelStatus.CONNECTED &&
                         (this.Client.Configuration.MaxSearchSeconds == 0
-                        || (DateTime.Now-row.StartSearchTime).TotalSeconds < this.Client.Configuration.MaxSearchSeconds)))
+                        || (DateTime.Now - row.StartSearchTime).TotalSeconds < this.Client.Configuration.MaxSearchSeconds)))
                     {
                         c.SearchInverval *= 2;
                         if (c.SearchInverval > 10)
@@ -100,6 +103,7 @@ namespace EpicsSharp.ChannelAccess.Client
                                 c.ElapsedTimings.Add("FirstSearch", c.Stopwatch.Elapsed);
                         }
 
+                        //Console.WriteLine("Sent search for " + c.ChannelName);
                         mem.Write(c.SearchPacket.Data, 0, c.SearchPacket.Data.Length);
                         if (mem.Length > 1400)
                         {
