@@ -63,7 +63,7 @@ namespace EpicsSharp.ChannelAccess.Tests
         }
 
         [TestMethod]
-        [Timeout(3000 * 10)]
+        [Timeout(3000 * 20)]
         public void TestMonitorReconnection()
         {
             const int MAX_WAIT = 500;
