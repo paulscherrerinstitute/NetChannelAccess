@@ -146,11 +146,12 @@ namespace EpicsSharp.ChannelAccess.Server
                     }
                 }
                 // Sleep max 100 milliseconds (and tries to adjust our loop)
-                if ((nextLoop - DateTime.Now).Milliseconds > 0)
+                var timeToWait = (nextLoop - DateTime.Now).Milliseconds;
+                if (timeToWait > 0)
                 {
                     try
                     {
-                        Thread.Sleep((nextLoop - DateTime.Now).Milliseconds);
+                        Thread.Sleep(timeToWait);
                     }
                     catch
                     {

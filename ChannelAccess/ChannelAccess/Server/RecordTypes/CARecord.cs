@@ -200,8 +200,13 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         internal virtual void ProcessRecord()
         {
             lastProccessed = DateTime.Now;
-            if (RecordProcessed != null)
-                RecordProcessed(this, null);
+            try
+            {
+                RecordProcessed?.Invoke(this, null);
+            }
+            catch
+            {
+            }
             IsDirty = false;
         }
 
@@ -374,8 +379,13 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 
         internal void CallPrepareRecord()
         {
-            if (PrepareRecord != null)
-                PrepareRecord(this, null);
+           try
+            {
+                PrepareRecord?.Invoke(this, null);
+            }
+            catch
+            {
+            }
         }
 
         public int GetInt(string key)
