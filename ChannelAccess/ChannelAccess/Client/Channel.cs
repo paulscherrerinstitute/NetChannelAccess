@@ -50,6 +50,7 @@ namespace EpicsSharp.ChannelAccess.Client
     {
         public string ChannelName { get; protected set; }
         private ChannelStatus status = ChannelStatus.REQUESTED;
+        DateTime statusChangeTime = DateTime.UtcNow;
         public ChannelStatus Status
         {
             get
@@ -61,6 +62,7 @@ namespace EpicsSharp.ChannelAccess.Client
                 //Console.WriteLine("New status " + value);
                 if (status == value)
                     return;
+                statusChangeTime = DateTime.UtcNow;
                 status = value;
                 try
                 {
@@ -70,10 +72,9 @@ namespace EpicsSharp.ChannelAccess.Client
                 {
 
                 }
-                /*if (StatusChanged != null)
-                    StatusChanged(this, Status);*/
             }
         }
+
         protected CAClient Client;
         internal ClientTcpReceiver ioc;
         protected static uint NextCid = 1;
@@ -830,12 +831,12 @@ namespace EpicsSharp.ChannelAccess.Client
         {
             if (Disposed)
                 return;
-            if (ioc != null)
-                ioc.RemoveChannel(this);
+            ioc?.RemoveChannel(this);
             lock (ConnectionLock)
             {
-                if (Status != ChannelStatus.CONNECTED)
+                if (Status != ChannelStatus.CONNECTED && Status != ChannelStatus.CONNECTING)
                     return;
+
                 Status = ChannelStatus.DISCONNECTED;
                 StartSearchTime = DateTime.Now;
                 ioc = null;
@@ -857,11 +858,50 @@ namespace EpicsSharp.ChannelAccess.Client
                                          p.SetUInt16(12 + 16, (ushort)MonitorMask);
 
                                          if (ioc != null)
-                                             ioc.Send(p);
+                                         {
+                                             try
+                                             {
+                                                 ioc.Send(p);
+                                             }
+                                             catch
+                                             {
+                                                 Disconnect();
+                                             }
+                                         }
                                          else
                                              Disconnect();
                                      });
                 }
+            }
+        }
+
+        internal void VerifyState()
+        {
+            if (Disposed)
+                return;
+
+            switch (Status)
+            {
+                case ChannelStatus.REQUESTED:
+                case ChannelStatus.DISCONNECTED:
+                    if ((DateTime.UtcNow - statusChangeTime).TotalSeconds > 0.5 && !Client.Searcher.Contains(this))
+                    {
+                        Status = ChannelStatus.CONNECTING;
+                        Disconnect();
+                    }
+                    break;
+                case ChannelStatus.CONNECTING:
+                    if ((DateTime.UtcNow - statusChangeTime).TotalSeconds > 0.5)
+                    {
+                        // Still searching
+                        if (Client.Searcher.Contains(this))
+                            return;
+                        else
+                            Disconnect();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

@@ -59,6 +59,14 @@ namespace EpicsSharp.ChannelAccess.Client
             while (!disposed)
             {
                 Thread.Sleep(Configuration.EchoSleeping);
+
+                List<Channel> channels;
+                lock (Channels)
+                {
+                    channels = Channels.Values.ToList();
+                }
+                channels.ForEach(i => i.VerifyState());
+
                 List<TcpReceiver> toEcho;
                 lock (Iocs)
                 {
