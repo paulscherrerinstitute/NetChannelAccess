@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MultipleServerCheck
@@ -12,6 +13,7 @@ namespace MultipleServerCheck
     class Program
     {
         const int CATimeout = 5000;
+        static Stopwatch sw;
 
         static void Main(string[] args)
         {
@@ -49,45 +51,47 @@ namespace MultipleServerCheck
 
             // We first send a search packet
             // Using UdpClient as wraper class for our UDP communication
-            using (var udpClient = new UdpClient(5432)) // listening port
-            {
-                var search = DataPacket.Create(channelName.Length + 8 - channelName.Length % 8);
-                search.Command = 6; // CA_PROTO_SEARCH
-                search.DataType = 4; // DONT_REPLY
-                search.DataCount = 11; // MINOR PROTO VERSION
-                search.Parameter1 = 1; // CID
-                search.Parameter2 = 1; // CID
-                search.SetDataAsString(channelName);
+            var search = DataPacket.Create(channelName.Length + 8 - channelName.Length % 8);
+            search.Command = 6; // CA_PROTO_SEARCH
+            search.DataType = 4; // DONT_REPLY
+            search.DataCount = 11; // MINOR PROTO VERSION
+            search.Parameter1 = 1; // CID
+            search.Parameter2 = 1; // CID
+            search.SetDataAsString(channelName);
 
-                foreach (var c in ParseAddress(epicsConfig))
+            foreach (var c in ParseAddress(epicsConfig))
+            {
+                using (var udpClient = new UdpClient(0)) // listening port
                 {
                     Console.WriteLine("Searching in " + c);
-                    udpClient.Connect(c);
-                    udpClient.Send(search.Data, search.Data.Length);
+                    udpClient.EnableBroadcast = true;
+                    udpClient.BeginReceive(GotUdpMessage, udpClient);
 
-                    var sw = new Stopwatch();
+                    sw = new Stopwatch();
                     sw.Start();
-                    // No response before timeout, means no channel
+                    udpClient.Send(search.Data, search.Data.Length, c);
 
-                    List<string> knownServers = new List<string>();
-                    bool mustStop = false;
-                    while (!mustStop)
-                    {
-                        var receivedDataTask = udpClient.ReceiveAsync();
-                        if (await Task.WhenAny(receivedDataTask, Task.Delay(CATimeout)) != receivedDataTask)
-                        {
-                            mustStop = true;
-                            break;
-                        }
-                        remoteEP = receivedDataTask.Result.RemoteEndPoint;
-                        if (!knownServers.Contains(remoteEP.ToString()))
-                        {
-                            Console.WriteLine("Response from " + remoteEP.ToString() + " after " + sw.Elapsed.ToString());
-                            knownServers.Add(remoteEP.ToString());
-                        }
-                    }
+                    Thread.Sleep(5000);
                 }
             }
+        }
+
+        static void GotUdpMessage(IAsyncResult ar)
+        {
+            IPEndPoint ipeSender = new IPEndPoint(IPAddress.Any, 0);
+            byte[] buff;
+
+            var udpClient = ((UdpClient)ar.AsyncState);
+            try
+            {
+                buff = udpClient.EndReceive(ar, ref ipeSender);
+            }
+            catch
+            {
+                return;
+            }
+            Console.WriteLine("Response from " + ipeSender.ToString() + " after " + sw.Elapsed.ToString());
+            udpClient.BeginReceive(GotUdpMessage, udpClient);
         }
 
         static public IEnumerable<IPEndPoint> ParseAddress(string addrs)
