@@ -100,6 +100,7 @@ namespace EpicsSharp.ChannelAccess.Server
                 channelName = channelName.Split('.').First();
             }
 
+            //Console.WriteLine("Property "+ property);
             return server.Records[channelName][property];
         }
 

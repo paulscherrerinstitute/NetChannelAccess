@@ -16,16 +16,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using EpicsSharp.ChannelAccess.Constants;
-using EpicsSharp.Common.Pipes;
 using EpicsSharp.ChannelAccess.Common;
+using EpicsSharp.ChannelAccess.Constants;
 using EpicsSharp.ChannelAccess.Server.ChannelTypes;
-using EpicsSharp.ChannelAccess.Server.RecordTypes;
+using EpicsSharp.Common.Pipes;
+using System;
+using System.Linq;
 
 namespace EpicsSharp.ChannelAccess.Server
 {
@@ -33,8 +29,9 @@ namespace EpicsSharp.ChannelAccess.Server
     {
         public CAServer Server { get; set; }
 
+        static EpicsType[] stringTypes = new EpicsType[] { EpicsType.String, EpicsType.Control_String, EpicsType.Display_String, EpicsType.Status_String, EpicsType.Time_String };
 
-        static object lockObject = new object();
+        private static object lockObject = new object();
         public override void ProcessData(DataPacket packet)
         {
             if (DateTime.Now < Server.WaitTill)
@@ -92,6 +89,8 @@ namespace EpicsSharp.ChannelAccess.Server
                             }
                             if (!Server.Records.Contains(channelName))
                                 break;
+                            if (Server.Records[channelName].FindType(property) == EpicsType.Invalid)
+                                break;
 
                             DataPacket access = DataPacket.Create(16);
                             access.Command = (ushort)CommandID.CA_PROTO_ACCESS_RIGHTS;
@@ -111,7 +110,12 @@ namespace EpicsSharp.ChannelAccess.Server
                     case CommandID.CA_PROTO_READ_NOTIFY:
                         {
                             var record = ((ServerTcpReceiver)this.Pipe.FirstFilter).FindRecord(this.Server, packet.Parameter1);
-                            DataPacket response = DataPacketBuilder.Encode((EpicsType)packet.DataType, ((ServerTcpReceiver)this.Pipe.FirstFilter).RecordValue(this.Server, packet.Parameter1),
+                            //Console.WriteLine("Read on " + record.Name);
+                            object val= ((ServerTcpReceiver)this.Pipe.FirstFilter).RecordValue(this.Server, packet.Parameter1);
+
+                            if (stringTypes.Contains((EpicsType)packet.DataType) && val == null)
+                                val = "";
+                            DataPacket response = DataPacketBuilder.Encode((EpicsType)packet.DataType, val,
                                 record, ((int)packet.DataCount == 0 ? record.dataCount : (int)packet.DataCount));
                             response.Command = (ushort)CommandID.CA_PROTO_READ_NOTIFY;
                             response.Parameter1 = 1;

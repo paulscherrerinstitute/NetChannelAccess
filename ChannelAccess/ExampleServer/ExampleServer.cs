@@ -19,11 +19,7 @@
 using EpicsSharp.ChannelAccess.Server;
 using EpicsSharp.ChannelAccess.Server.RecordTypes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EpicsSharp.ChannelAccess.Examples
 {
@@ -33,15 +29,15 @@ namespace EpicsSharp.ChannelAccess.Examples
     /// This class demonstrates the server side usage of EpicsSharp,
     /// i.e. the EpicsSharp.ChannelAccess.Server.CAServer class.
     /// </summary>
-    class ExampleServer
+    internal class ExampleServer
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("EpicsSharp Channel Access Example Server");
             Console.WriteLine("----------------------------------------");
             Console.WriteLine();
 
-            CAServer server = new CAServer();
+            CAServer server = new CAServer(IPAddress.Parse("129.129.194.45"), 5055, 5055);
             Console.WriteLine("Listening on:");
             Console.WriteLine("  TCP port {0}", server.TcpPort);
             Console.WriteLine("  UDP port {0}", server.UdpPort);
