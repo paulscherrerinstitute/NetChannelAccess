@@ -56,9 +56,19 @@ namespace EpicsSharp.ChannelAccess.Server
                         break;
                     case CommandID.CA_PROTO_SEARCH:
                         {
-                            var channelName = packet.GetDataAsString(0).Split('.').First();
+                            var fullChannelName = packet.GetDataAsString(0);
+                            var channelName = fullChannelName;
+                            var property = "VAL";
+                            if (fullChannelName.IndexOf('.') != -1)
+                            {
+                                property = fullChannelName.Split('.').Last();
+                                channelName = fullChannelName.Split('.').First();
+                            }
                             if (!Server.Records.Contains(channelName))
                                 break;
+                            if (Server.Records[channelName].FindType(property) == EpicsType.Invalid)
+                                break;
+
                             DataPacket response = DataPacket.Create(8 + 16);
                             response.Command = (ushort)CommandID.CA_PROTO_SEARCH;
                             response.DataType = (ushort)Server.TcpPort;
