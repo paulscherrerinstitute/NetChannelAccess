@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ChannelAccess")]
-[assembly: AssemblyDescription("EpicsSharp is a software library for the .NET platform implementing the Channel Access protocol used by EPICS (version 3.14).")]
+[assembly: AssemblyDescription("EpicsSharp is a software library for the .NET platform implementing the Channel Access protocol used by EPICS (version 3.14). The library contains both the EPICS client as well as the EPICS server.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Paul Scherrer Institute")]
 [assembly: AssemblyProduct("ChannelAccess")]
