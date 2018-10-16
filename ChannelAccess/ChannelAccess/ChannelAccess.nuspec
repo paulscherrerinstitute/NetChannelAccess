@@ -10,7 +10,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$
 
-This package replaces the packages "CaSharpServer" and "EpicsClient2". Both the EPICS client and server functionalities are offered here.
+This package replaces the packages "CaSharpServer" and "EpicsClient2".
 
 -------------------------------------------------------------------   
 The following code will read a value of a channel (ARIDI-PCT:CURRENT) and print it out on the screen
@@ -28,7 +28,8 @@ namespace ConsoleApp4
             // Required if you use an EPICS Gateway, otherwise skip the line
             client.Configuration.SearchAddress = "sls-cagw:5062";
             var channel = client.CreateChannel&gt;string&lt;("ARIDI-PCT:CURRENT");
-            // Synchronously read a channel and shows the value. If the channel doesn't exist an exception will be thrown.
+            // Synchronously read a channel and shows the value.
+            // If the channel doesn't exist an exception will be thrown.
             Console.WriteLine(channel.Get());        
         }
     }
