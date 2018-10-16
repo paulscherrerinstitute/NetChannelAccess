@@ -62,6 +62,9 @@ namespace ConsoleApp4
     }
 }
 -------------------------------------------------------------------
+
+Note:
+The client library will use the app settings "e#ServerList" to grab potential SearchAddress.
     </description>
     <copyright>Copyright © 2013 - 2018 $author$</copyright>    
   </metadata>
