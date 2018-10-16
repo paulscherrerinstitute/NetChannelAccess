@@ -6,7 +6,7 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <projectUrl>https://sourceforge.net/p/epicssharp/wiki/Home/</projectUrl>
+    <!--<projectUrl>https://sourceforge.net/p/epicssharp/wiki/Home/</projectUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$
 
@@ -63,6 +63,6 @@ namespace ConsoleApp4
 }
 -------------------------------------------------------------------
     </description>
-    <copyright>Copyright © 2013 - 2017 $author$</copyright>    
+    <copyright>Copyright © 2013 - 2018 $author$</copyright>    
   </metadata>
 </package>
