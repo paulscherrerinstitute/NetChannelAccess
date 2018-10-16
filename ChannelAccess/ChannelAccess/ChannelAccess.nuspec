@@ -9,6 +9,7 @@
     <projectUrl>https://sourceforge.net/p/epicssharp/wiki/Home/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright © 2013 - 2017 $author$</copyright>
+    <documentation src="readme.md" />
+    <copyright>Copyright © 2013 - 2017 $author$</copyright>    
   </metadata>
 </package>

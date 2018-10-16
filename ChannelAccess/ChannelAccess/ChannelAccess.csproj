@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ChannelAccess.nuspec" />
+    <None Include="readme.md" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
