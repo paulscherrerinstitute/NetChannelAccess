@@ -1,0 +1,6 @@
+**/packages/**
+**/.vs/**
+**/bin/**
+**/obj/**
+# Node modules shall not be added
+**/node_modules/**

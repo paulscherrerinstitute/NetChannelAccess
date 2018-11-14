@@ -88,12 +88,12 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
                 case EpicsType.Byte:
                     {
                         if (nbElements == 1 && !sourceType.IsArray && !sourceType.IsGenericType)
-                            result.SetInt32(16 + offset, Convert.ToByte(value));
+                            result.SetInt32(result.HeaderSize + offset, Convert.ToByte(value));
                         else
                         {
                             dynamic t = value;
                             for (var i = 0; i < nbElements; i++)
-                                result.SetInt32(16 + offset + i, Convert.ToByte(t[i]));
+                                result.SetInt32(result.HeaderSize + offset + i, Convert.ToByte(t[i]));
                         }
                     }
                     break;
@@ -104,12 +104,12 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
                 case EpicsType.Status_Int:
                     {
                         if (nbElements == 1 && !sourceType.IsArray && !sourceType.IsGenericType)
-                            result.SetInt32(16 + offset, Convert.ToInt32(value));
+                            result.SetInt32(result.HeaderSize + offset, Convert.ToInt32(value));
                         else
                         {
                             dynamic t = value;
                             for (var i = 0; i < nbElements; i++)
-                                result.SetInt32(16 + offset + i * 4, Convert.ToInt32(t[i]));
+                                result.SetInt32(result.HeaderSize + offset + i * 4, Convert.ToInt32(t[i]));
                         }
                     }
                     break;
@@ -120,12 +120,12 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
                 case EpicsType.Display_Float:
                     {
                         if (nbElements == 1 && !sourceType.IsArray && !sourceType.IsGenericType)
-                            result.SetFloat(16 + offset, Convert.ToSingle(value));
+                            result.SetFloat(result.HeaderSize + offset, Convert.ToSingle(value));
                         else
                         {
                             dynamic t = value;
                             for (var i = 0; i < nbElements; i++)
-                                result.SetFloat(16 + offset + i * 4, Convert.ToSingle(t[i]));
+                                result.SetFloat(result.HeaderSize + offset + i * 4, Convert.ToSingle(t[i]));
                         }
                     }
                     break;
@@ -136,12 +136,12 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
                 case EpicsType.Display_Double:
                     {
                         if (nbElements == 1 && !sourceType.IsArray && !sourceType.IsGenericType)
-                            result.SetDouble(16 + offset, Convert.ToDouble(value));
+                            result.SetDouble(result.HeaderSize + offset, Convert.ToDouble(value));
                         else
                         {
                             dynamic t = value;
                             for (var i = 0; i < nbElements; i++)
-                                result.SetFloat(16 + offset + i * 8, Convert.ToDouble(t[i]));
+                                result.SetFloat(result.HeaderSize + offset + i * 8, Convert.ToDouble(t[i]));
                         }
                     }
                     break;
@@ -152,12 +152,12 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
                 case EpicsType.Display_Short:
                     {
                         if (nbElements == 1 && !sourceType.IsArray && !sourceType.IsGenericType)
-                            result.SetInt16(16 + offset, Convert.ToInt16(value));
+                            result.SetInt16(result.HeaderSize + offset, Convert.ToInt16(value));
                         else
                         {
                             dynamic t = value;
                             for (var i = 0; i < nbElements; i++)
-                                result.SetFloat(16 + offset + i * 2, Convert.ToInt16(t[i]));
+                                result.SetFloat(result.HeaderSize + offset + i * 2, Convert.ToInt16(t[i]));
                         }
                     }
                     break;

@@ -20,11 +20,7 @@ using EpicsSharp.ChannelAccess.Client;
 using EpicsSharp.ChannelAccess.Server;
 using EpicsSharp.ChannelAccess.Server.RecordTypes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Sandbox
 {
@@ -35,11 +31,62 @@ namespace Sandbox
         Daniel
     }
 
-    enum GoodEnumU8 : byte { zero, one, two }
+    internal enum GoodEnumU8 : byte { zero, one, two }
 
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
+        {
+            //CAServer server = new CAServer(System.Net.IPAddress.Parse("129.129.194.45"), 5432, 5432);
+            CAServer server = new CAServer(System.Net.IPAddress.Parse("127.0.0.1"), 5432, 5432);
+            var record = server.CreateArrayRecord<CAIntArrayRecord>("BERTRAND:ARR", 196 * 196);
+            var start = 0;
+            record.Scan = EpicsSharp.ChannelAccess.Constants.ScanAlgorithm.HZ2;
+            record.PrepareRecord += (sender, evt) =>
+              {
+                  for (var i = 0; i < record.Value.Length; i++)
+                      record.Value[i] = start + i;
+                  start++;
+              };
+
+            var r2 = server.CreateRecord<CAStringRecord>("BERTRAND:STR");
+            r2.Value = "Hello there!";
+
+            server.Start();
+
+            //Thread.Sleep(1000);
+
+            CAClient client = new CAClient();
+            //client.Configuration.SearchAddress = "129.129.194.45:5432";
+            client.Configuration.SearchAddress = "127.0.0.1:5432";
+            var channel = client.CreateChannel<int[]>("BERTRAND:ARR");
+            channel.MonitorMask = EpicsSharp.ChannelAccess.Constants.MonitorMask.ALL;
+
+            channel.StatusChanged += (sender, newStatus) =>
+            {
+                Console.WriteLine(
+                  "{0} : status {1}",
+                  sender.ChannelName,
+                  newStatus
+                );
+            };
+            int sequenceNumber = 0;
+            channel.WishedDataCount = 196 * 196;
+            channel.MonitorChanged += (sender, newValue) =>
+            {
+                Console.WriteLine(
+                  $"{sender.ChannelName} : {newValue.Length} array elements ; #{sequenceNumber++}"
+                );
+            };
+
+            /*var chan2 = client.CreateChannel<string>("BERTRAND:STR");
+            Console.WriteLine(chan2.Get());*/
+
+            //var r = channel.Get();
+            System.Console.ReadLine();
+        }
+
+        private static void S1()
         {
 
 
@@ -64,7 +111,7 @@ namespace Sandbox
 
             CAClient client = new CAClient();
             //client.Configuration.WaitTimeout = 1000;
-            client.Configuration.SearchAddress="129.129.130.44:5432";
+            client.Configuration.SearchAddress = "129.129.130.44:5432";
             /*var c = client.CreateChannel<ExtControlEnum>("BERTRAND:ENUM");
             var r=c.Get();*/
 

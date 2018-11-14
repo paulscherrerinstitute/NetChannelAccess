@@ -18,10 +18,9 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
-using System.Net;
 
 namespace EpicsSharp.ChannelAccess.Common
 {
@@ -41,8 +40,7 @@ namespace EpicsSharp.ChannelAccess.Common
         /// Allows to change the sending rules
         /// </summary>
         public bool ReverseAnswer = false;
-
-        bool? extendedMessage;
+        private bool? extendedMessage;
         /// <summary>
         /// Checks if it's an extended message or not.
         /// To check we look at the payload site as well as the datacount.
@@ -57,7 +55,7 @@ namespace EpicsSharp.ChannelAccess.Common
             }
         }
 
-        ushort? command;
+        private ushort? command;
         /// <summary>
         /// The ChannelAccess command
         /// </summary>
@@ -76,7 +74,7 @@ namespace EpicsSharp.ChannelAccess.Common
             }
         }
 
-        uint? payloadSize;
+        private uint? payloadSize;
         /// <summary>
         /// Payload size either on bytes 2-4 or 16-20
         /// </summary>
@@ -127,7 +125,9 @@ namespace EpicsSharp.ChannelAccess.Common
                     // Value is bigger than the limit, we should rebuild the message
                     if (value > 16000)
                     {
-                        DataPacket oldPacket = (DataPacket)this.Clone();
+                        var oldPacket = (DataPacket)this.Clone();
+                        extendedMessage = true;
+                        payloadSize = null;
                         Data = new byte[Data.Length + 8];
                         if (oldPacket.PayloadSize > 0)
                             Buffer.BlockCopy(oldPacket.Data, (int)oldPacket.HeaderSize, Data, 24, (int)oldPacket.PayloadSize);
@@ -184,18 +184,18 @@ namespace EpicsSharp.ChannelAccess.Common
         {
             get
             {
-                return PayloadSize + HeaderSize;
+                return PayloadSize + (uint)HeaderSize;
             }
         }
 
         /// <summary>
         /// Returns the size of the header
         /// </summary>
-        public UInt32 HeaderSize
+        public int HeaderSize
         {
             get
             {
-                return (UInt32)(ExtendedMessage ? 24 : 16);
+                return (ExtendedMessage ? 24 : 16);
             }
         }
 
@@ -308,8 +308,6 @@ namespace EpicsSharp.ChannelAccess.Common
 
         public short GetInt16(int position)
         {
-            //return (UInt32)(((uint)Data[position + 0] << 24) | ((uint)Data[position + 1] << 16) | ((uint)Data[position + 2] << 8) | ((uint)Data[position + 3]));
-
             byte[] uintBytes = new byte[2];
             Buffer.BlockCopy(Data, position, uintBytes, 0, 2);
             Array.Reverse(uintBytes);
@@ -435,8 +433,8 @@ namespace EpicsSharp.ChannelAccess.Common
             return p;
         }
 
-        static Dictionary<int, Stack<DataPacket>> storedPackets = new Dictionary<int, Stack<DataPacket>>();
-        static SemaphoreSlim poolLocker = new SemaphoreSlim(1, 1);
+        private static Dictionary<int, Stack<DataPacket>> storedPackets = new Dictionary<int, Stack<DataPacket>>();
+        private static SemaphoreSlim poolLocker = new SemaphoreSlim(1, 1);
 
         public void Dispose()
         {
@@ -446,7 +444,15 @@ namespace EpicsSharp.ChannelAccess.Common
         {
             DataPacket p = new DataPacket();
             p.Data = new byte[size];
-            p.SetUInt16(2, (ushort)(size - 16));
+            if (size > 30000)
+            {
+                p.extendedMessage = true;
+                p.SetUInt32(16, (uint)(size - 24)); // extended payload
+                p.SetUInt16(2, 0xFFFF); // short payload
+                p.SetUInt16(6, 0x0000); // short datacount
+            }
+            else
+                p.SetUInt16(2, (ushort)(size - 16));
             return p;
         }
 
