@@ -16,15 +16,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
 using EpicsSharp.ChannelAccess.Client;
 using EpicsSharp.ChannelAccess.Server;
-using System.Net.Sockets;
+using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Sockets;
 
 namespace EpicsSharp.Common.Pipes
 {
@@ -72,9 +69,9 @@ namespace EpicsSharp.Common.Pipes
             return res;
         }
 
-        internal static DataPipe CreateClientUdp(CAClient client)
+        internal static DataPipe CreateClientUdp(CAClient client, int udpReceiverPort = 0)
         {
-            DataPipe res = PopulatePipe(new Type[] { typeof(UdpReceiver), typeof(PacketSplitter), typeof(ClientHandleMessage) });
+            DataPipe res = PopulatePipe(new object[] { new UdpReceiver(null, udpReceiverPort), typeof(PacketSplitter), typeof(ClientHandleMessage) });
             ((ClientHandleMessage)res.LastFilter).Client = client;
             return res;
         }
@@ -97,18 +94,42 @@ namespace EpicsSharp.Common.Pipes
             return res;
         }
 
-        static DataPipe PopulatePipe(Type[] types)
+        private static DataPipe PopulatePipe(Type[] types)
         {
             DataPipe pipe = new DataPipe();
             AddToPipe(types, pipe);
             return pipe;
         }
 
-        static void AddToPipe(Type[] types, DataPipe pipe)
+        private static DataPipe PopulatePipe(object[] objects)
+        {
+            DataPipe pipe = new DataPipe();
+            AddToPipe(objects, pipe);
+            return pipe;
+        }
+
+        private static void AddToPipe(Type[] types, DataPipe pipe)
         {
             foreach (Type t in types)
             {
                 DataFilter w = (DataFilter)t.GetConstructor(new Type[] { }).Invoke(new object[] { });
+                w.Pipe = pipe;
+                pipe.Add(w);
+            }
+        }
+
+        private static void AddToPipe(object[] objects, DataPipe pipe)
+        {
+            foreach (var o in objects)
+            {
+                DataFilter w;
+                if (o is Type)
+                {
+                    var t = (Type)o;
+                    w = (DataFilter)t.GetConstructor(new Type[] { }).Invoke(new object[] { });
+                }
+                else
+                    w = (DataFilter)o;
                 w.Pipe = pipe;
                 pipe.Add(w);
             }

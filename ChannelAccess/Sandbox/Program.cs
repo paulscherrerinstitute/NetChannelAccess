@@ -37,19 +37,20 @@ namespace Sandbox
     {
         private static void Main(string[] args)
         {
-            var client = new CAClient();
+            var client = new CAClient(5432);
             //client.Configuration.SearchAddress = "129.129.194.45:5432";
 
-            client.Configuration.SearchAddress = "129.129.194.45:5055";
+            //client.Configuration.SearchAddress = "129.129.194.45:5055";
+            client.Configuration.SearchAddress = "129.129.130.255:5064";
             //client.Configuration.SearchAddress = "129.129.130.255:5064;129.129.131.255:5064;129.129.137.255:5064;129.129.158.255:5064";
             client.Configuration.WaitTimeout = 2000;
             //var channel = client.CreateChannel<string>("SYSAD-AB:HOSTNAME");
             //var channel = client.CreateChannel<string>("ARIDI-PCT:CURRENT");
             //var r = channel.Get();
-            var channel = client.CreateChannel<int[]>("DISKFREE-AB-LT:ARR-S");
-            channel.MonitorMask = EpicsSharp.ChannelAccess.Constants.MonitorMask.ALL;
+            var channel = client.CreateChannel<int[]>("DISKFREE-AB-LT:ARR-L");
+            //channel.MonitorMask = EpicsSharp.ChannelAccess.Constants.MonitorMask.ALL;
 
-            int sequenceNumber = 0;
+            /*int sequenceNumber = 0;
             channel.StatusChanged += (sender, newStatus) =>
             {
                 Console.WriteLine(
@@ -64,9 +65,9 @@ namespace Sandbox
                 Console.WriteLine(
                   $"{sender.ChannelName} : {newValue.Length} array elements ; #{sequenceNumber++}"
                 );
-            };
+            };*/
 
-            //var r = channel.Get();
+            var r = channel.Get<int[]>();
 
 
             System.Console.ReadLine();

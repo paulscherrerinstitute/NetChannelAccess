@@ -54,6 +54,15 @@ namespace EpicsSharp.ChannelAccess.Client
             echoThread.Start();
         }
 
+        public CAClient(int udpReceiverPort)
+        {
+            Udp = DataPipe.CreateClientUdp(this,udpReceiverPort);
+            Searcher = new Searcher(this);
+            echoThread = new Thread(Echoer);
+            echoThread.IsBackground = true;
+            echoThread.Start();
+        }
+
         void Echoer()
         {
             while (!disposed)
