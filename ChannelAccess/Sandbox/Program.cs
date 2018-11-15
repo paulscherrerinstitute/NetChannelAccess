@@ -37,6 +37,43 @@ namespace Sandbox
     {
         private static void Main(string[] args)
         {
+            var client = new CAClient();
+            //client.Configuration.SearchAddress = "129.129.194.45:5432";
+
+            client.Configuration.SearchAddress = "129.129.194.45:5055";
+            //client.Configuration.SearchAddress = "129.129.130.255:5064;129.129.131.255:5064;129.129.137.255:5064;129.129.158.255:5064";
+            client.Configuration.WaitTimeout = 2000;
+            //var channel = client.CreateChannel<string>("SYSAD-AB:HOSTNAME");
+            //var channel = client.CreateChannel<string>("ARIDI-PCT:CURRENT");
+            //var r = channel.Get();
+            var channel = client.CreateChannel<int[]>("DISKFREE-AB-LT:ARR-S");
+            channel.MonitorMask = EpicsSharp.ChannelAccess.Constants.MonitorMask.ALL;
+
+            int sequenceNumber = 0;
+            channel.StatusChanged += (sender, newStatus) =>
+            {
+                Console.WriteLine(
+                  "{0} : status {1}",
+                  sender.ChannelName,
+                  newStatus
+                );
+            };
+
+            channel.MonitorChanged += (sender, newValue) =>
+            {
+                Console.WriteLine(
+                  $"{sender.ChannelName} : {newValue.Length} array elements ; #{sequenceNumber++}"
+                );
+            };
+
+            //var r = channel.Get();
+
+
+            System.Console.ReadLine();
+        }
+
+        internal static void S2()
+        {
             //CAServer server = new CAServer(System.Net.IPAddress.Parse("129.129.194.45"), 5432, 5432);
             CAServer server = new CAServer(System.Net.IPAddress.Parse("127.0.0.1"), 5432, 5432);
             var record = server.CreateArrayRecord<CAIntArrayRecord>("BERTRAND:ARR", 196 * 196);

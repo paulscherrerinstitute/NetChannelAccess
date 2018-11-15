@@ -156,7 +156,7 @@ namespace EpicsSharp.ChannelAccess.Client
             p.Parameter1 = SID;
             p.Parameter2 = CID;
 
-            p.SetUInt16(12 + 16, (ushort)MonitorMask);
+            p.SetUInt16(12 + p.HeaderSize, (ushort)MonitorMask);
 
             //Console.WriteLine("Send monitor pre");
             if (ioc != null)

@@ -274,7 +274,7 @@ namespace EpicsSharp.ChannelAccess.Client
                 payloadSize += 8 - (payloadSize % 8);
             }
             // if payload too large, use extended header
-            if (payloadSize > 0x4000)
+            if (payloadSize > 0x4000 || nbElem > 30000)
                 headerSize = 24;
             DataPacket packet = DataPacket.Create(headerSize + payloadSize);
             packet.Command = (ushort)CommandID.CA_PROTO_WRITE_NOTIFY;
@@ -528,7 +528,7 @@ namespace EpicsSharp.ChannelAccess.Client
                                          p.Parameter1 = SID;
                                          p.Parameter2 = CID;
 
-                                         p.SetUInt16(12 + 16, (ushort)MonitorMask);
+                                         p.SetUInt16(12 + p.HeaderSize, (ushort)MonitorMask);
 
                                          ioc.Send(p);
                                      });
