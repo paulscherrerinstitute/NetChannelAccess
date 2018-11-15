@@ -47,7 +47,7 @@ namespace Sandbox
             //var channel = client.CreateChannel<string>("SYSAD-AB:HOSTNAME");
             //var channel = client.CreateChannel<string>("ARIDI-PCT:CURRENT");
             //var r = channel.Get();
-            var channel = client.CreateChannel<int[]>("DISKFREE-AB-LT:ARR-L");
+            var channel = client.CreateChannel<int[]>("DISKFREE-AB-LT:ARR-M");
             //channel.MonitorMask = EpicsSharp.ChannelAccess.Constants.MonitorMask.ALL;
 
             /*int sequenceNumber = 0;

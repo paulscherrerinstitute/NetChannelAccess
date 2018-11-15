@@ -49,9 +49,10 @@ namespace EpicsSharp.ChannelAccess.Common
         {
             get
             {
-                if (!extendedMessage.HasValue)
+                /*if (!extendedMessage.HasValue)
                     extendedMessage = (GetUInt16(2) == 0xFFFF && GetUInt16(6) == 0x0000);
-                return extendedMessage.Value;
+                return extendedMessage.Value;*/
+                return (GetUInt16(2) == 0xFFFF && GetUInt16(6) == 0x0000);
             }
         }
 
@@ -123,7 +124,7 @@ namespace EpicsSharp.ChannelAccess.Common
                 else
                 {
                     // Value is bigger than the limit, we should rebuild the message
-                    if (value > 16000)
+                    if (value > 1600)
                     {
                         var oldPacket = (DataPacket)this.Clone();
                         extendedMessage = true;
