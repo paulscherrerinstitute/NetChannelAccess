@@ -32,7 +32,7 @@ namespace EpicsSharp.ChannelAccess.MonitorTest
     {
         static void Main(string[] args)
         {
-            Trace.Listeners.Add(new TextWriterTraceListener(System.Console.Out));
+            /*Trace.Listeners.Add(new TextWriterTraceListener(System.Console.Out));
             Trace.Listeners.Add(new TextWriterTraceListener(System.IO.File.CreateText(@"C:\temp\monitortest.log")));
             var t = new EpicsSharp.ChannelAccess.Tests.MonitorReconnectionTests();
             Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
@@ -59,7 +59,7 @@ namespace EpicsSharp.ChannelAccess.MonitorTest
                     Trace.WriteLine(ex.StackTrace);
                     Trace.Flush();
                 }
-            }
+            }*/
         }
 
 
