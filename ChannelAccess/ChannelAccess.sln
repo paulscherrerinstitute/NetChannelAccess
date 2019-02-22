@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChannelAccess", "ChannelAccess\ChannelAccess.csproj", "{CC7E581B-0A2D-4B9C-91E9-59F1015ACA67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChannelAccess", "ChannelAccess\ChannelAccess.csproj", "{CC7E581B-0A2D-4B9C-91E9-59F1015ACA67}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8B6F89E3-A78F-4698-8F3B-B88F7269C089}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,11 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceCheck", "PerformanceCheck\PerformanceCheck.csproj", "{15511C42-E254-4F8D-936F-8220FE68A21B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleDynamicArray", "ExampleDynamicArrayServer\ExampleDynamicArray.csproj", "{0B714C31-06D0-4E2E-AF61-84C209F71915}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaConnectionChecks", "CaConnectionChecks\CaConnectionChecks.csproj", "{37762056-E204-4328-B426-7F303A924078}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipleServerCheck", "MultipleServerCheck\MultipleServerCheck.csproj", "{5DB12DE6-6BB8-475F-8D15-6D97E9F48E5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubArrayDemo", "SubArrayDemo\SubArrayDemo.csproj", "{DCCDC9C2-0375-45E7-87DA-195A8DFF7A7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,10 +63,6 @@ Global
 		{15511C42-E254-4F8D-936F-8220FE68A21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15511C42-E254-4F8D-936F-8220FE68A21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15511C42-E254-4F8D-936F-8220FE68A21B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B714C31-06D0-4E2E-AF61-84C209F71915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B714C31-06D0-4E2E-AF61-84C209F71915}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B714C31-06D0-4E2E-AF61-84C209F71915}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B714C31-06D0-4E2E-AF61-84C209F71915}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37762056-E204-4328-B426-7F303A924078}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{37762056-E204-4328-B426-7F303A924078}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37762056-E204-4328-B426-7F303A924078}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -75,48 +71,16 @@ Global
 		{5DB12DE6-6BB8-475F-8D15-6D97E9F48E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DB12DE6-6BB8-475F-8D15-6D97E9F48E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DB12DE6-6BB8-475F-8D15-6D97E9F48E5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCCDC9C2-0375-45E7-87DA-195A8DFF7A7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCCDC9C2-0375-45E7-87DA-195A8DFF7A7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCCDC9C2-0375-45E7-87DA-195A8DFF7A7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCCDC9C2-0375-45E7-87DA-195A8DFF7A7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C6B7403-6EB0-474E-896D-B284D010BDCF}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.psi.ch/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = ChannelAccess\\ChannelAccess.csproj
-		SccProjectName1 = ChannelAccess
-		SccLocalPath1 = ChannelAccess
-		SccProjectUniqueName2 = ChannelAccessTests\\ChannelAccessTests.csproj
-		SccProjectName2 = ChannelAccessTests
-		SccLocalPath2 = ChannelAccessTests
-		SccProjectUniqueName3 = ExampleClient\\ExampleClient.csproj
-		SccProjectName3 = ExampleClient
-		SccLocalPath3 = ExampleClient
-		SccProjectUniqueName4 = ExampleServer\\ExampleServer.csproj
-		SccProjectName4 = ExampleServer
-		SccLocalPath4 = ExampleServer
-		SccProjectUniqueName5 = MonitorTest\\MonitorTest.csproj
-		SccProjectName5 = MonitorTest
-		SccLocalPath5 = MonitorTest
-		SccProjectUniqueName6 = PerformanceCheck\\PerformanceCheck.csproj
-		SccProjectName6 = PerformanceCheck
-		SccLocalPath6 = PerformanceCheck
-		SccProjectUniqueName7 = Sandbox\\Sandbox.csproj
-		SccProjectName7 = Sandbox
-		SccLocalPath7 = Sandbox
-		SccProjectUniqueName8 = ExampleDynamicArrayServer\\ExampleDynamicArray.csproj
-		SccProjectName8 = ExampleDynamicArrayServer
-		SccLocalPath8 = ExampleDynamicArrayServer
-		SccProjectUniqueName9 = CaConnectionChecks\\CaConnectionChecks.csproj
-		SccProjectName9 = CaConnectionChecks
-		SccLocalPath9 = CaConnectionChecks
-		SccProjectUniqueName10 = MultipleServerCheck\\MultipleServerCheck.csproj
-		SccProjectName10 = MultipleServerCheck
-		SccLocalPath10 = MultipleServerCheck
 	EndGlobalSection
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True

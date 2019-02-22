@@ -29,5 +29,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         {
             this.Value = "";
         }
+
+        internal override int NumElementsInRecord => 1;
     }
 }

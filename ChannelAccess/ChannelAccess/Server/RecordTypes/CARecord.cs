@@ -23,6 +23,7 @@ using System.Reflection;
 using EpicsSharp.ChannelAccess.Constants;
 using System.Globalization;
 using System.Threading;
+using System.Collections.ObjectModel;
 
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
@@ -224,7 +225,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
             }
         }
 
-        internal int dataCount = 1;
+        internal abstract int NumElementsInRecord { get; }
 
         object lockProps = new object();
         Dictionary<string, PropertyCache> knownProps = null;
@@ -235,14 +236,30 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 
             knownProps = new Dictionary<string, PropertyCache>();
             PropertyInfo[] props = this.GetType().GetProperties();
-            foreach (var i in props)
+            foreach (var property in props)
             {
-                CAFieldAttribute attr = (CAFieldAttribute)i.GetCustomAttributes(typeof(CAFieldAttribute), true).FirstOrDefault();
+                CAFieldAttribute attr = (CAFieldAttribute)property.GetCustomAttributes(typeof(CAFieldAttribute), true).FirstOrDefault();
+                var propertyType = property.PropertyType;
                 if (attr != null)
-                    knownProps.Add(attr.Name.ToUpper(), new PropertyCache() {
-                        Info = i,
-                        IsContainer = i.PropertyType.IsGenericType && i.PropertyType.BaseType.GetGenericTypeDefinition() == typeof(Container<>)
-                    });
+                {
+                    var propCache = new PropertyCache()
+                    {
+                        Info = property,
+                        IsContainer = false,
+                    };
+                    if (propertyType.IsGenericType)
+                    {
+                        var genericTypeDef = propertyType.GetGenericTypeDefinition();
+
+                        if (genericTypeDef == typeof(ReadOnlyCollection<>)) // For subArray implementation
+                            propCache.IsContainer = true;
+                        if (genericTypeDef == typeof(ArrayContainer<>)) // For array implementation
+                            propCache.IsContainer = true;
+                    }
+
+                    knownProps.Add(attr.Name.ToUpper(), propCache);
+                }
+
             }
         }
 
@@ -379,7 +396,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 
         internal void CallPrepareRecord()
         {
-           try
+            try
             {
                 PrepareRecord?.Invoke(this, null);
             }

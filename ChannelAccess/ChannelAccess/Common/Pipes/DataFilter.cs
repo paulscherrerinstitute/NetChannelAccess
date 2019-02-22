@@ -41,13 +41,13 @@ namespace EpicsSharp.Common.Pipes
         {
             try
             {
-                if (ReceiveData != null)
-                    ReceiveData(packet);
+                ReceiveData?.Invoke(packet);
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex);
             }
-        }
+}
 
         public virtual void Dispose()
         {

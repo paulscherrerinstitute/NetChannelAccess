@@ -167,5 +167,8 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 
             base.ProcessRecord();
         }
+
+        internal override int NumElementsInRecord => 1;
+
     }
 }

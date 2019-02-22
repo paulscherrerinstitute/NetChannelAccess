@@ -46,10 +46,10 @@ namespace EpicsSharp.ChannelAccess.Tests
             client.Configuration.SearchAddress = "127.0.0.1";
             client.Configuration.WaitTimeout = TIMEOUT;
 
-            serverInit();
+            ServerInit();
         }
 
-        void serverInit()
+        void ServerInit()
         {
             server = new CAServer(IPAddress.Parse("127.0.0.1"));
             records = new CADoubleRecord[10];
@@ -211,20 +211,11 @@ namespace EpicsSharp.ChannelAccess.Tests
             findValue = 0;
             server.Dispose();
             Thread.Sleep(100);
-            serverInit();
+            ServerInit();
             if (!waitOne.WaitOne(TIMEOUT))
                 throw new Exception("Timeout 2");
             Assert.AreEqual(10.0, findValue);
         }
 
-        [TestMethod]
-        public void TestArrayEnumerator()
-        {
-            var arr = server.CreateArrayRecord<CAIntSubArrayRecord>("ZZZ", 20);
-            foreach (var i in arr)
-            {
-
-            }
-        }
     }
 }

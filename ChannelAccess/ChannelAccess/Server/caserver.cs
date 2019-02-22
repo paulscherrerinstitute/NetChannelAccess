@@ -97,6 +97,16 @@ namespace EpicsSharp.ChannelAccess.Server
             return result;
         }
 
+        public CASubArrayRecord<CAType> CreateSubArrayRecord<CAType>(string name, CAArrayRecord<CAType> arrayRecord) where CAType : IComparable
+        {
+            var result = new CASubArrayRecord<CAType>(arrayRecord)
+            {
+                Name = name,
+            };
+            records.Add(result);
+            return result;
+        }
+
         internal void RegisterClient(DataPipe chain)
         {
             lock (tcpConnections)

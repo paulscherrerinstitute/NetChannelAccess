@@ -97,9 +97,13 @@ namespace EpicsSharp.ChannelAccess.Client
                 {
                     if (ChannelDataCount != 0)
                     {
+                        var dataType = typeof(TType);
+                        if (dataType.IsArray)
+                            dataType = dataType.GetElementType();
+
                         DataPacket p = DataPacket.Create(16);
                         p.Command = (ushort)CommandID.CA_PROTO_EVENT_CANCEL;
-                        p.DataType = (ushort)TypeHandling.Lookup[typeof(TType)];
+                        p.DataType = (ushort)TypeHandling.Lookup[dataType];
                         p.DataCount = MonitoredElements;
                         p.Parameter1 = SID;
                         p.Parameter2 = CID;

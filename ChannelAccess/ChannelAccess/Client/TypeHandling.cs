@@ -81,6 +81,14 @@ namespace EpicsSharp.ChannelAccess.Client
 
             // Array types
 
+            {typeof(byte[]),EpicsType.Byte},
+            {typeof(string[]),EpicsType.String},
+            {typeof(short[]),EpicsType.Short},
+            {typeof(int[]),EpicsType.Int},
+            {typeof(float[]),EpicsType.Float},
+            {typeof(double[]),EpicsType.Double},
+            {typeof(Enum[]),EpicsType.Enum},
+
             {typeof(ExtType<byte[]>) ,EpicsType.Status_Byte},
             {typeof(ExtType<string[]>),EpicsType.Status_String},
             {typeof(ExtType<short[]>) ,EpicsType.Status_Short},
