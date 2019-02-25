@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 
 namespace EpicsSharp.ChannelAccess.Tests
@@ -17,6 +18,8 @@ namespace EpicsSharp.ChannelAccess.Tests
 
         private const string FloatSubArrayChannelName = "TEST:FLOATSUBARR";
 
+        private const string ByteSubArrayChannelName = "TEST:BYTESUBARR";
+
         private const int TIMEOUT = 2000;
 
         private CAServer Server;
@@ -27,6 +30,8 @@ namespace EpicsSharp.ChannelAccess.Tests
 
         private CASubArrayRecord<float> FloatSubArrayRecord;
 
+        private CASubArrayRecord<byte> ByteSubArrayRecord;
+
         [TestInitialize]
         public void Initialize()
         {
@@ -34,6 +39,9 @@ namespace EpicsSharp.ChannelAccess.Tests
             Client = new CAClient();
             Client.Configuration.SearchAddress = "127.0.0.1";
             Client.Configuration.WaitTimeout = TIMEOUT;
+
+            var countChange = new AutoResetEvent(false);
+            long count = 3;
 
             IntArrayRecord = Server.CreateArrayRecord<CAIntArrayRecord>(IntArrayChannelName, 20);
             IntSubArrayRecord = Server.CreateSubArrayRecord(IntSubArrayChannelName, IntArrayRecord);
@@ -44,14 +52,32 @@ namespace EpicsSharp.ChannelAccess.Tests
             for (byte i = 0; i < FloatSubArrayRecord.FullArray.Length; i++)
                 FloatSubArrayRecord.FullArray[i] = i;
 
-            Server.Start();
+            ByteSubArrayRecord = Server.CreateSubArrayRecord<CAByteSubArrayRecord>(ByteSubArrayChannelName, 35);
+            var str = "Hello world";
+            var bytes = Encoding.ASCII.GetBytes(str);
+            for (byte i = 0; i < bytes.Length; i++)
+                ByteSubArrayRecord.FullArray[i] = bytes[i];
+            ByteSubArrayRecord.Scan = Constants.ScanAlgorithm.HZ10;
 
-            AutoResetEvent waitOne = new AutoResetEvent(false);
-            IntArrayRecord.RecordProcessed += (obj, args) =>
+            void ProcessedHandler(object obj, EventArgs args)
             {
-                waitOne.Set();
+                Interlocked.Decrement(ref count);
+                countChange.Set();
             };
-            waitOne.WaitOne();
+
+            IntArrayRecord.RecordProcessed += ProcessedHandler;
+            FloatSubArrayRecord.RecordProcessed += ProcessedHandler;
+            ByteSubArrayRecord.RecordProcessed += ProcessedHandler;
+
+            while (Interlocked.Read(ref count) > 0)
+            {
+                if (!countChange.WaitOne(TIMEOUT))
+                {
+                    Server.Dispose();
+                    throw new Exception("Timed out");
+                }
+            }
+            Server.Start();
         }
 
         [TestCleanup]
@@ -103,6 +129,16 @@ namespace EpicsSharp.ChannelAccess.Tests
             FloatSubArrayRecord.Length = 6;
             floatSubArrayResponse = floatSubArrayChannel.Get<float[]>(5); // Take only first 5 of the subarray
             CollectionAssert.AreEqual(new float[] { 1, 2, 3, 4, 5 }, floatSubArrayResponse);
+        }
+
+        [TestMethod]
+        [Timeout(15000)]
+        public void TestByteSubArrayGet()
+        {
+            var byteSubArrayChannel = Client.CreateChannel<byte[]>(ByteSubArrayChannelName);
+            var bytes = byteSubArrayChannel.Get<byte[]>(11);
+            var str = Encoding.ASCII.GetString(bytes);
+            Assert.AreEqual("Hello world", str);
         }
 
         [TestMethod]

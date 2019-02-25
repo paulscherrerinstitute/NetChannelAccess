@@ -33,32 +33,37 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
         {
             switch (type)
             {
-                case EpicsType.Int:
+                case EpicsType.Byte:
                 case EpicsType.Short:
+                case EpicsType.Int:
                 case EpicsType.Float:
                 case EpicsType.Double:
                 case EpicsType.String:
                     return SimpleChannel.Encode(type, source, record, nbElements);
-                case EpicsType.Status_Int:
+                case EpicsType.Status_Byte:
                 case EpicsType.Status_Short:
+                case EpicsType.Status_Int:
                 case EpicsType.Status_Float:
                 case EpicsType.Status_Double:
                 case EpicsType.Status_String:
                     return ExtChannel.Encode(type, source, record, nbElements);
-                case EpicsType.Time_Int:
+                case EpicsType.Time_Byte:
                 case EpicsType.Time_Short:
+                case EpicsType.Time_Int:
                 case EpicsType.Time_Float:
                 case EpicsType.Time_Double:
                 case EpicsType.Time_String:
                     return TimeChannel.Encode(type, source, record, nbElements);
-                case EpicsType.Control_Int:
+                case EpicsType.Control_Byte:
                 case EpicsType.Control_Short:
+                case EpicsType.Control_Int:
                 case EpicsType.Control_Float:
                 case EpicsType.Control_Double:
                 case EpicsType.Control_String:
                     return ControlChannel.Encode(type, source, record, nbElements);
-                case EpicsType.Display_Int:
+                case EpicsType.Display_Byte:
                 case EpicsType.Display_Short:
+                case EpicsType.Display_Int:
                 case EpicsType.Display_Float:
                 case EpicsType.Display_Double:
                 case EpicsType.Display_String:
@@ -88,12 +93,12 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
                 case EpicsType.Byte:
                     {
                         if (nbElements == 1 && !sourceType.IsArray && !sourceType.IsGenericType)
-                            result.SetInt32(result.HeaderSize + offset, Convert.ToByte(value));
+                            result.SetByte(result.HeaderSize + offset, Convert.ToByte(value));
                         else
                         {
                             dynamic t = value;
                             for (var i = 0; i < nbElements; i++)
-                                result.SetInt32(result.HeaderSize + offset + i, Convert.ToByte(t[i]));
+                                result.SetByte(result.HeaderSize + offset + i, Convert.ToByte(t[i]));
                         }
                     }
                     break;

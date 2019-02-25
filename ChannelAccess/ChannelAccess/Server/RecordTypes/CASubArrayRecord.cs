@@ -38,6 +38,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
             CanBeRemotlySet = false;
             CheckArrayElementType();
             MaxLength = fullArray.Length;
+            Length = fullArray.Length;
 
             FullArray.Modified += (s, e) => {
                 IsDirty = true; // Changes in the full array should trigger a subArray update

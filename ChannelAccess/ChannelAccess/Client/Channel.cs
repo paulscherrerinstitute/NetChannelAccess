@@ -437,6 +437,8 @@ namespace EpicsSharp.ChannelAccess.Client
 
                 int pos = (int)RawData.HeaderSize + startPost;
                 int elementSize = TypeHandling.EpicsSize(baseT);
+                if (nbElements > RawData.DataCount)
+                    throw new Exception($"Less elements were returned than requested. Returned: {RawData.DataCount}, Requested: {nbElements}");
                 for (int i = 0; i < nbElements; i++)
                 {
                     switch (TypeHandling.Lookup[baseT])
