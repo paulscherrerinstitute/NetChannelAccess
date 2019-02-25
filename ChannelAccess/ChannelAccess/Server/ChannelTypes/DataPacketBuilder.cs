@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -141,8 +141,7 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
                         {
                             dynamic t = value;
                             for (var i = 0; i < nbElements; i++)
-                                result.SetFloat(result.HeaderSize + offset + i * 8, Convert.ToDouble(t[i]));
-#warning FOUND BY MARC: SHOULDN'T IT BE SetDouble as SimpleChannel.Encode allocates (4 + n*8) bytes for it
+                                result.SetDouble(result.HeaderSize + offset + i * 8, Convert.ToDouble(t[i]));
                         }
                     }
                     break;
@@ -158,8 +157,7 @@ namespace EpicsSharp.ChannelAccess.Server.ChannelTypes
                         {
                             dynamic t = value;
                             for (var i = 0; i < nbElements; i++)
-                                result.SetFloat(result.HeaderSize + offset + i * 2, Convert.ToInt16(t[i]));
-#warning FOUND BY MARC: SHOULDN'T IT BE SetInt16 as SimpleChannel.Encode allocates (n*2) bytes for it
+                                result.SetInt16(result.HeaderSize + offset + i * 2, Convert.ToInt16(t[i]));
                         }
                     }
                     break;

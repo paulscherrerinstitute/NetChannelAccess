@@ -2,7 +2,7 @@
 /*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ namespace EpicsSharp.Common.Pipes
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.Error.WriteLine(ex);
             }
 }
 

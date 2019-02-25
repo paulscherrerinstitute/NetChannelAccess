@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -110,7 +110,7 @@ namespace EpicsSharp.ChannelAccess.Server
             CARecord record = ((ServerTcpReceiver)this.Pipe.FirstFilter).FindRecord(server, sid);
             string property = ((ServerTcpReceiver)this.Pipe.FirstFilter).FindProperty(server, sid);
 
-            DataPacket response = DataPacketBuilder.Encode(type, record[property], record, (nbElements == 0) ? record.NumElementsInRecord : Math.Min(nbElements, record.NumElementsInRecord));
+            DataPacket response = DataPacketBuilder.Encode(type, record[property], record, (nbElements == 0) ? record.ElementsInRecord : Math.Min(nbElements, record.ElementsInRecord));
             response.Command = (ushort)CommandID.CA_PROTO_EVENT_ADD;
             response.Parameter1 = 1;
             response.Parameter2 = (uint)subscriptionId;
@@ -125,7 +125,7 @@ namespace EpicsSharp.ChannelAccess.Server
                 if (mask == MonitorMask.ALARM && lastStatus == record.AlarmStatus)
                     return;
                 lastStatus = record.AlarmStatus;
-                DataPacket p = DataPacketBuilder.Encode(type, record[property], record, (nbElements == 0) ? record.NumElementsInRecord : Math.Min(nbElements, record.NumElementsInRecord));
+                DataPacket p = DataPacketBuilder.Encode(type, record[property], record, (nbElements == 0) ? record.ElementsInRecord : Math.Min(nbElements, record.ElementsInRecord));
                 p.Command = (ushort)CommandID.CA_PROTO_EVENT_ADD;
                 p.Parameter1 = 1;
                 p.Parameter2 = (uint)subscriptionId;

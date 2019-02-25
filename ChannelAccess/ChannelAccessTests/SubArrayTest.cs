@@ -14,15 +14,17 @@ namespace EpicsSharp.ChannelAccess.Tests
     {
         private const string IntArrayChannelName = "TEST:INTARR";
         private const string IntSubArrayChannelName = "TEST:INTSUBARR";
-        private const string FloatArrayChannelName = "TEST:FLOATARR";
+
         private const string FloatSubArrayChannelName = "TEST:FLOATSUBARR";
+
         private const int TIMEOUT = 2000;
 
         private CAServer Server;
         private CAClient Client;
+
         private CAIntArrayRecord IntArrayRecord;
         private CASubArrayRecord<int> IntSubArrayRecord;
-        private CAFloatArrayRecord FloatArrayRecord;
+
         private CASubArrayRecord<float> FloatSubArrayRecord;
 
         [TestInitialize]
@@ -35,15 +37,12 @@ namespace EpicsSharp.ChannelAccess.Tests
 
             IntArrayRecord = Server.CreateArrayRecord<CAIntArrayRecord>(IntArrayChannelName, 20);
             IntSubArrayRecord = Server.CreateSubArrayRecord(IntSubArrayChannelName, IntArrayRecord);
-            IntSubArrayRecord.MaxLength = IntSubArrayRecord.FullArrayLength;
             for (var i = 0; i < IntArrayRecord.Value.Length; i++)
                 IntArrayRecord.Value[i] = i;
 
-            FloatArrayRecord = Server.CreateArrayRecord<CAFloatArrayRecord>(FloatArrayChannelName, 10);
-            FloatSubArrayRecord = Server.CreateSubArrayRecord(FloatSubArrayChannelName, FloatArrayRecord);
-            FloatSubArrayRecord.MaxLength = FloatSubArrayRecord.FullArrayLength;
-            for (byte i = 0; i < FloatArrayRecord.Value.Length; i++)
-                FloatArrayRecord.Value[i] = i;
+            FloatSubArrayRecord = Server.CreateSubArrayRecord<CAFloatSubArrayRecord>(FloatSubArrayChannelName, 10);
+            for (byte i = 0; i < FloatSubArrayRecord.FullArray.Length; i++)
+                FloatSubArrayRecord.FullArray[i] = i;
 
             Server.Start();
 
@@ -106,16 +105,6 @@ namespace EpicsSharp.ChannelAccess.Tests
             CollectionAssert.AreEqual(new float[] { 1, 2, 3, 4, 5 }, floatSubArrayResponse);
         }
 
-        //[TestMethod]
-        //[Timeout(15000)]
-        //public void TestClientConfiguredIntSubArray()
-        //{
-        //    var intSubArrayChannel = Client.CreateChannel<ExtControl<int[]>>(IntSubArrayChannelName);
-        //    var control = intSubArrayChannel.Get();
-
-        //    Assert.Fail("Not implemented");
-        //}
-
         [TestMethod]
         [Timeout(5000)]
         public void TestSubArrayMonitor()
@@ -144,7 +133,6 @@ namespace EpicsSharp.ChannelAccess.Tests
                 numCalled++;
             };
 
-            IntSubArrayRecord.MaxLength = IntArrayRecord.Value.Length;
             IntSubArrayRecord.Length = 4;
             IntSubArrayRecord.Index = 0;
             void Prepare(object sender, EventArgs e)

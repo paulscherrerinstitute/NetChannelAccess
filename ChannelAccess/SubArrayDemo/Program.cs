@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,7 +41,6 @@ namespace SubArrayDemo
                 for (var i = 0; i < 20; i++)
                     intArrChannel.Value[i] = i;
 
-                subArrChannel.MaxLength = intArrChannel.Value.Length;
                 subArrChannel.Index = 0;
                 subArrChannel.Length = 10;
 

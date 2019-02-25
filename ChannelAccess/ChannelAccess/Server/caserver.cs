@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -97,9 +97,21 @@ namespace EpicsSharp.ChannelAccess.Server
             return result;
         }
 
-        public CASubArrayRecord<CAType> CreateSubArrayRecord<CAType>(string name, CAArrayRecord<CAType> arrayRecord) where CAType : IComparable
+        public CAType CreateSubArrayRecord<CAType>(string name, int size) where CAType : CASubArrayRecord
         {
-            var result = new CASubArrayRecord<CAType>(arrayRecord)
+            var caType = typeof(CAType);
+            var elementType = caType.BaseType.GetGenericArguments().Single();
+            var containerType = typeof(ArrayContainer<>).MakeGenericType(elementType);
+            var container = Activator.CreateInstance(containerType, size);
+            var record = (CAType)caType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, new Type[] { containerType }, null).Invoke(new object[] { container});
+            record.Name = name;
+            records.Add(record);
+            return record;
+        }
+
+        public CASubArrayRecord<TArrayElement> CreateSubArrayRecord<TArrayElement>(string name, CAArrayRecord<TArrayElement> arrayRecord) where TArrayElement : IComparable
+        {
+            var result = new CASubArrayRecord<TArrayElement>(arrayRecord.Value)
             {
                 Name = name,
             };

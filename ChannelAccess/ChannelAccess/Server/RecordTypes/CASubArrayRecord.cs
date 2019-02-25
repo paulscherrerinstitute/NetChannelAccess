@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,19 +23,23 @@ using System.Linq;
 
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
+    public abstract class CASubArrayRecord : CARecord
+    {
+    }
 
-    public class CASubArrayRecord<TArrayElementType> : CARecord where TArrayElementType : IComparable
+    public class CASubArrayRecord<TArrayElement> : CASubArrayRecord where TArrayElement : IComparable
     {
 
-        private readonly CAArrayRecord<TArrayElementType> FullArrayRecord;
+        public ArrayContainer<TArrayElement> FullArray { get; private set; }
 
-        public CASubArrayRecord(CAArrayRecord<TArrayElementType> fullArrayRecord)
+        public CASubArrayRecord(ArrayContainer<TArrayElement> fullArray)
         {
-            FullArrayRecord = fullArrayRecord ?? throw new ArgumentNullException(nameof(fullArrayRecord));
+            FullArray = fullArray ?? throw new ArgumentNullException(nameof(fullArray));
             CanBeRemotlySet = false;
             CheckArrayElementType();
+            MaxLength = fullArray.Length;
 
-            FullArrayRecord.Value.Modified += (s, e) => {
+            FullArray.Modified += (s, e) => {
                 IsDirty = true; // Changes in the full array should trigger a subArray update
             };
         }
@@ -50,7 +54,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
                 typeof(float),
                 typeof(double),
             };
-            var arrayElementType = typeof(TArrayElementType);
+            var arrayElementType = typeof(TArrayElement);
             if (!supportedArrayTypes.Contains(arrayElementType))
                 throw new ArgumentException($"Unsupported array type '{arrayElementType.FullName}', expected one of '{string.Join(", ", supportedArrayTypes.Select(t => t.FullName))}'");
         }
@@ -88,7 +92,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
                 return _Index;
             }
             set {
-                if (value < 0 || value >= FullArrayLength)
+                if (value < 0 || value >= FullArray.Length)
                 {
                     var newIndex = MaxLength - 1;
                     if (_Index != newIndex)
@@ -112,12 +116,12 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         [CAField("NORD")]
         public int ActualLength {
             get {
-                var maximumPossibleLength = FullArrayLength - Index;
+                var maximumPossibleLength = FullArray.Length - Index;
                 return Math.Min(Math.Min(maximumPossibleLength, Length), MaxLength);
             }
         }
 
-        internal override int NumElementsInRecord => ActualLength;
+        internal override int ElementsInRecord => ActualLength;
 
         /// <summary>
         /// Allows the server logic to set the maximum length of the sub array
@@ -146,24 +150,14 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         }
         private int _MaxNumRequestedElements = 1;
 
-        /// <summary>
-        /// Returns the length of the full array
-        /// </summary>
-        public int FullArrayLength {
-            get
-            {
-                return FullArrayRecord.Value.Length;
-            }
-        }
-
         [CAField("VAL")]
-        public ReadOnlyCollection<TArrayElementType> Value
+        public ReadOnlyCollection<TArrayElement> Value
         {
             get
             {
-                if (FullArrayRecord.Value == null || MaxLength < 1)
-                    return null;
-                var subArray = FullArrayRecord.Value
+                if (MaxLength < 1)
+                    return Array.AsReadOnly(new TArrayElement[0]);
+                var subArray = FullArray
                     .AsEnumerable()
                     .Skip(Index)
                     .Take(Length)

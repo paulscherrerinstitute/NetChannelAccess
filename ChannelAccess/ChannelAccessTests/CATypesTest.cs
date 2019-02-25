@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,8 @@ using EpicsSharp.ChannelAccess.Server;
 using EpicsSharp.ChannelAccess.Server.RecordTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace EpicsSharp.ChannelAccess.Tests
 {
@@ -50,20 +46,20 @@ namespace EpicsSharp.ChannelAccess.Tests
             record = server.CreateRecord<CADoubleRecord>("TEST:DBL");
 
             record.LowAlarmLimit = 25;
-            record.LowAlarmSeverity = EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MINOR;
+            record.LowAlarmSeverity = Constants.AlarmSeverity.MINOR;
             record.LowLowAlarmLimit = 20;
-            record.LowLowAlarmSeverity = EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR;
+            record.LowLowAlarmSeverity = Constants.AlarmSeverity.MAJOR;
 
             record.HighAlarmLimit = 100;
-            record.HighAlarmSeverity = EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MINOR;
+            record.HighAlarmSeverity = Constants.AlarmSeverity.MINOR;
             record.HighHighAlarmLimit = 105;
-            record.HighHighAlarmSeverity = EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR;
+            record.HighHighAlarmSeverity = Constants.AlarmSeverity.MAJOR;
 
             record.Value = 10;
             record.EngineeringUnits = "My";
             server.Start();
             AutoResetEvent waitOne = new AutoResetEvent(false);
-            record.RecordProcessed += delegate (object obj, EventArgs args)
+            record.RecordProcessed += (obj, args) =>
             {
                 waitOne.Set();
             };
@@ -84,10 +80,10 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtControl<double>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, 10.0);
-            Assert.AreEqual(r.LowAlertLimit, 20.0);
-            Assert.AreEqual(r.EGU, "My");
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual(10.0, r.Value);
+            Assert.AreEqual(20.0, r.LowAlertLimit);
+            Assert.AreEqual("My", r.EGU);
         }
 
         [TestMethod]
@@ -97,10 +93,10 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtGraphic<double>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, 10.0);
-            Assert.AreEqual(r.LowAlertLimit, 20.0);
-            Assert.AreEqual(r.EGU, "My");
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual(10.0, r.Value);
+            Assert.AreEqual(20.0, r.LowAlertLimit);
+            Assert.AreEqual("My", r.EGU);
         }
 
         [TestMethod]
@@ -110,9 +106,9 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtTimeType<double>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, 10.0);
-            Assert.AreEqual((DateTime.Now - r.Time).TotalSeconds < 1, true);
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual(10.0, r.Value);
+            Assert.AreEqual(true, (DateTime.Now - r.Time).TotalSeconds < 1);
         }
 
         [TestMethod]
@@ -122,8 +118,8 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtType<double>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Value, 10.0);
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
+            Assert.AreEqual(10.0, r.Value);
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
         }
 
         //////////////////////////////////////////////
@@ -135,10 +131,10 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtControl<int>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, 10);
-            Assert.AreEqual(r.LowAlertLimit, 20.0);
-            Assert.AreEqual(r.EGU, "My");
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual(10, r.Value);
+            Assert.AreEqual(20.0, r.LowAlertLimit);
+            Assert.AreEqual("My", r.EGU);
         }
 
         [TestMethod]
@@ -148,10 +144,10 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtGraphic<int>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, 10);
-            Assert.AreEqual(r.LowAlertLimit, 20.0);
-            Assert.AreEqual(r.EGU, "My");
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual(10, r.Value);
+            Assert.AreEqual(20.0, r.LowAlertLimit);
+            Assert.AreEqual("My", r.EGU);
         }
 
         [TestMethod]
@@ -161,9 +157,9 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtTimeType<int>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, 10);
-            Assert.AreEqual((DateTime.Now - r.Time).TotalSeconds < 1, true);
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual(10, r.Value);
+            Assert.AreEqual(true, (DateTime.Now - r.Time).TotalSeconds < 1);
         }
 
         [TestMethod]
@@ -173,8 +169,8 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtType<int>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Value, 10);
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
+            Assert.AreEqual(10, r.Value);
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
         }
 
         //////////////////////////////////////////////
@@ -186,10 +182,10 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtControl<float>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, 10f);
-            Assert.AreEqual(r.LowAlertLimit, 20.0);
-            Assert.AreEqual(r.EGU, "My");
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual(10f, r.Value);
+            Assert.AreEqual(20.0, r.LowAlertLimit);
+            Assert.AreEqual("My", r.EGU);
         }
 
         [TestMethod]
@@ -199,10 +195,10 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtGraphic<float>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, 10f);
-            Assert.AreEqual(r.LowAlertLimit, 20.0);
-            Assert.AreEqual(r.EGU, "My");
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual(10f, r.Value);
+            Assert.AreEqual(20.0, r.LowAlertLimit);
+            Assert.AreEqual("My", r.EGU);
         }
 
         [TestMethod]
@@ -212,9 +208,9 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtTimeType<float>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, 10f);
-            Assert.AreEqual((DateTime.Now - r.Time).TotalSeconds < 1, true);
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual(10f, r.Value);
+            Assert.AreEqual(true, (DateTime.Now - r.Time).TotalSeconds < 1);
         }
 
         [TestMethod]
@@ -224,8 +220,8 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtType<float>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Value, 10f);
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
+            Assert.AreEqual(10f, r.Value);
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
         }
 
         //////////////////////////////////////////////
@@ -237,8 +233,8 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtControl<string>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, "10");
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual("10", r.Value);
         }
 
         [TestMethod]
@@ -248,8 +244,8 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtGraphic<string>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, "10");
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual("10", r.Value);
         }
 
         [TestMethod]
@@ -259,8 +255,8 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtTimeType<string>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
-            Assert.AreEqual(r.Value, "10");
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
+            Assert.AreEqual("10", r.Value);
         }
 
         [TestMethod]
@@ -270,8 +266,8 @@ namespace EpicsSharp.ChannelAccess.Tests
             var c = client.CreateChannel<ExtType<string>>("TEST:DBL");
             var r = c.Get();
 
-            Assert.AreEqual(r.Value, "10");
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
+            Assert.AreEqual("10", r.Value);
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
         }
 
         [TestMethod]
@@ -303,8 +299,8 @@ namespace EpicsSharp.ChannelAccess.Tests
             if (!waitOne.WaitOne(8000))
                 Assert.Fail("Never received data");
 
-            Assert.AreEqual(r.Value, "10");
-            Assert.AreEqual(r.Severity, EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR);
+            Assert.AreEqual("10", r.Value);
+            Assert.AreEqual(Constants.AlarmSeverity.MAJOR, r.Severity);
         }
     }
 }

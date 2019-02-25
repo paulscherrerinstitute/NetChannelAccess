@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -434,17 +434,16 @@ namespace EpicsSharp.ChannelAccess.Common
             return p;
         }
 
-        private static Dictionary<int, Stack<DataPacket>> storedPackets = new Dictionary<int, Stack<DataPacket>>();
-        private static SemaphoreSlim poolLocker = new SemaphoreSlim(1, 1);
-
         public void Dispose()
         {
         }
 
         public static DataPacket Create(int size)
         {
-            DataPacket p = new DataPacket();
-            p.Data = new byte[size];
+            DataPacket p = new DataPacket
+            {
+                Data = new byte[size]
+            };
             if (size > 30000)
             {
                 p.extendedMessage = true;
