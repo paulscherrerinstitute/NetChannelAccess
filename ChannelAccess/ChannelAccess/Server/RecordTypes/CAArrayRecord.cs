@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,49 +17,28 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
     public abstract class CAArrayRecord : CARecord { }
 
-    public abstract class CAArrayRecord<TType> : CAArrayRecord<ArrayContainer<TType>, TType> where TType : IComparable
-    {
-        public CAArrayRecord(int size) : base(size) { }
-    }
-
-    public class CAArrayRecord<TContainer, TType> : CAArrayRecord, IEnumerable<TType>
+    public class CAArrayRecord<TType> : CAArrayRecord
         where TType : IComparable
-        where TContainer : Container<TType>
     {
-        /// <summary>
-        /// Stores the actual value of the record
-        /// </summary>
-        TContainer currentValue;
 
-
-        public IEnumerator<TType> GetEnumerator()
+        public CAArrayRecord(int size)
         {
-            return this.currentValue.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
+            Value = new ArrayContainer<TType>(size);
+            Value.Modified += (s, e) => {
+                IsDirty = true;
+            };
         }
 
         /// <summary>
         /// Access the value linked to the record
         /// </summary>
         [CAField("VAL")]
-        public TContainer Value
-        {
-            get
-            {
-                return currentValue;
-            }
-        }
+        public ArrayContainer<TType> Value { get; private set; }
 
         string engineeringUnits = "";
         /// <summary>
@@ -86,17 +65,6 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         [CAField("PREC")]
         public short DisplayPrecision { get; set; }
 
-        public CAArrayRecord(int size)
-        {
-            currentValue = (TContainer)Activator.CreateInstance(typeof(TContainer), new object[] { size }); ;
-            currentValue.Modified += CurrentValue_ArrayModified;
-            dataCount = size;
-        }
-
-        void CurrentValue_ArrayModified(object sender, ModificationEventArgs e)
-        {
-            IsDirty = true;
-            dataCount = currentValue.Length;
-        }
+        internal override int ElementsInRecord => Value.Length;
     }
 }

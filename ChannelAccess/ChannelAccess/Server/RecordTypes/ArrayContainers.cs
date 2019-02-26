@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,12 +23,13 @@ using System.Collections.Generic;
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
 
-    public class ArrayContainer<TType> : Container<TType> where TType : IComparable
+    public class ArrayContainer<TType> : IEnumerable<TType>
+        where TType : IComparable
     {
         /// <summary>
         /// The modification event
         /// </summary>
-        public override event EventHandler<ModificationEventArgs> Modified;
+        public event EventHandler<ModificationEventArgs> Modified;
 
         /// <summary>
         /// The values
@@ -47,7 +48,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         /// <summary>
         /// The length of the array
         /// </summary>
-        public override int Length
+        public int Length
         {
             get
             {
@@ -60,7 +61,7 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
         /// </summary>
         /// <param name="key">The index</param>
         /// <returns>The elemnt at the given index</returns>
-        public override TType this[int key]
+        public TType this[int key]
         {
             get
             {
@@ -74,10 +75,26 @@ namespace EpicsSharp.ChannelAccess.Server.RecordTypes
             }
         }
 
-        public override IEnumerator<TType> GetEnumerator()
+        public IEnumerator<TType> GetEnumerator()
         {
             foreach (var i in values)
                 yield return i;
         }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
+    /// <summary>
+    /// Event arguments that get passed on with the Modified-event
+    /// </summary>
+    public class ModificationEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The modified index
+        /// </summary>
+        public int Index { get; set; }
     }
 }

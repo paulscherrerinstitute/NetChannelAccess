@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -227,15 +227,15 @@ namespace EpicsSharp.ChannelAccess.Client
             HasValue = false;
             WaitConnection();
 
-            //SendReadNotify<TType>(nbElements == 0 ? this.ChannelDataCount : nbElements);
             SendReadNotify<TType>(nbElements);
 
             if (GetAnswerEvent.WaitOne(Client.Configuration.WaitTimeout) == false)
                 throw new Exception("Read Notify timeout.");
 
-            if (nbElements == 0)
-                return DecodeData<TType>(RawData.DataCount);
-            return DecodeData<TType>(nbElements);
+            // Always read the specified number of elements except for the case where nbElements is 0
+            // Then read the number of elements that were sent, as it could be subArray values that are requested
+            // by setting nbElements to 0.
+            return DecodeData<TType>(nbElements == 0 ? RawData.DataCount  : nbElements);
         }
 
         public async Task<TType> GetAsync<TType>(uint nbElements = 0)
@@ -437,6 +437,8 @@ namespace EpicsSharp.ChannelAccess.Client
 
                 int pos = (int)RawData.HeaderSize + startPost;
                 int elementSize = TypeHandling.EpicsSize(baseT);
+                if (nbElements > RawData.DataCount)
+                    throw new Exception($"Less elements were returned than requested. Returned: {RawData.DataCount}, Requested: {nbElements}");
                 for (int i = 0; i < nbElements; i++)
                 {
                     switch (TypeHandling.Lookup[baseT])

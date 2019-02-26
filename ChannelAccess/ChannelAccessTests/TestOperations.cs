@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -46,37 +46,47 @@ namespace EpicsSharp.ChannelAccess.Tests
             client.Configuration.SearchAddress = "127.0.0.1";
             client.Configuration.WaitTimeout = TIMEOUT;
 
-            serverInit();
+            ServerInit();
         }
 
-        void serverInit()
+        void ServerInit()
         {
             server = new CAServer(IPAddress.Parse("127.0.0.1"));
             records = new CADoubleRecord[10];
+
+            var countChange = new AutoResetEvent(false);
+            long count = 10;
+
             for (var i = 0; i < 10; i++)
             {
                 records[i] = server.CreateRecord<CADoubleRecord>("TEST:DBL:" + i);
 
-                records[i].Scan = EpicsSharp.ChannelAccess.Constants.ScanAlgorithm.HZ10;
+                records[i].Scan = Constants.ScanAlgorithm.HZ10;
                 records[i].LowAlarmLimit = 25;
-                records[i].LowAlarmSeverity = EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MINOR;
+                records[i].LowAlarmSeverity = Constants.AlarmSeverity.MINOR;
                 records[i].LowLowAlarmLimit = 20;
-                records[i].LowLowAlarmSeverity = EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR;
+                records[i].LowLowAlarmSeverity = Constants.AlarmSeverity.MAJOR;
                 records[i].HighAlarmLimit = 100;
-                records[i].HighAlarmSeverity = EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MINOR;
+                records[i].HighAlarmSeverity = Constants.AlarmSeverity.MINOR;
                 records[i].HighHighAlarmLimit = 105;
-                records[i].HighHighAlarmSeverity = EpicsSharp.ChannelAccess.Constants.AlarmSeverity.MAJOR;
+                records[i].HighHighAlarmSeverity = Constants.AlarmSeverity.MAJOR;
                 records[i].EngineeringUnits = "My";
-                /*AutoResetEvent waitOne = new AutoResetEvent(false);
-                records[i].RecordProcessed += delegate(object obj, EventArgs args)
+
+                records[i].RecordProcessed += (obj, args) =>
                 {
-                    waitOne.Set();
+                    Interlocked.Decrement(ref count);
+                    countChange.Set();
                 };
                 records[i].Value = 10;
-                waitOne.WaitOne();*/
-                records[i].Value = 10;
+
             }
             server.Start();
+
+            while(Interlocked.Read(ref count) > 0)
+            {
+                if (!countChange.WaitOne(TIMEOUT))
+                    throw new Exception("Timed out");
+            }
         }
 
         [TestCleanup]
@@ -127,7 +137,7 @@ namespace EpicsSharp.ChannelAccess.Tests
                 waitOne.Set();
             };
             waitOne.WaitOne();
-            Assert.AreEqual(EpicsSharp.ChannelAccess.Constants.AlarmStatus.NO_ALARM, records[5].AlarmStatus);
+            Assert.AreEqual(Constants.AlarmStatus.NO_ALARM, records[5].AlarmStatus);
         }
 
         [TestMethod]
@@ -151,7 +161,7 @@ namespace EpicsSharp.ChannelAccess.Tests
                 channels.Add(client.CreateChannel("TEST:DBL:" + i));
             client.MultiConnect(channels);
             for (var i = 0; i < 10; i++)
-                Assert.AreEqual(EpicsSharp.ChannelAccess.Constants.ChannelStatus.CONNECTED, channels[i].Status);
+                Assert.AreEqual(Constants.ChannelStatus.CONNECTED, channels[i].Status);
         }
 
         [TestMethod]
@@ -166,6 +176,8 @@ namespace EpicsSharp.ChannelAccess.Tests
                 findValue = (double)newValue;
                 waitOne.Set();
             };
+
+            records[5].Value = 10;
             waitOne.WaitOne();
             Assert.AreEqual(10.0, findValue);
         }
@@ -211,20 +223,11 @@ namespace EpicsSharp.ChannelAccess.Tests
             findValue = 0;
             server.Dispose();
             Thread.Sleep(100);
-            serverInit();
+            ServerInit();
             if (!waitOne.WaitOne(TIMEOUT))
                 throw new Exception("Timeout 2");
             Assert.AreEqual(10.0, findValue);
         }
 
-        [TestMethod]
-        public void TestArrayEnumerator()
-        {
-            var arr = server.CreateArrayRecord<CAIntSubArrayRecord>("ZZZ", 20);
-            foreach (var i in arr)
-            {
-
-            }
-        }
     }
 }

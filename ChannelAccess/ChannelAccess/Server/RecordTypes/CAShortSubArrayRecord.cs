@@ -19,9 +19,9 @@
 
 namespace EpicsSharp.ChannelAccess.Server.RecordTypes
 {
-    public class CAByteSubArrayRecord : CASubArrayRecord<byte>
+    public class CAShortSubArrayRecord : CASubArrayRecord<short>
     {
-        public CAByteSubArrayRecord(ArrayContainer<byte> fullArray) : base(fullArray)
+        public CAShortSubArrayRecord(ArrayContainer<short> fullArray) : base(fullArray)
         {
         }
     }

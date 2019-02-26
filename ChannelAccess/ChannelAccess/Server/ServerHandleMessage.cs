@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 using EpicsSharp.ChannelAccess.Common;
 using EpicsSharp.ChannelAccess.Constants;
 using EpicsSharp.ChannelAccess.Server.ChannelTypes;
+using EpicsSharp.ChannelAccess.Server.RecordTypes;
 using EpicsSharp.Common.Pipes;
 using System;
 using System.Linq;
@@ -101,7 +102,7 @@ namespace EpicsSharp.ChannelAccess.Server
                             DataPacket response = DataPacket.Create(16);
                             response.Command = (ushort)CommandID.CA_PROTO_CREATE_CHAN;
                             response.DataType = (ushort)Server.Records[channelName].FindType(property);
-                            response.DataCount = (uint)(property == "VAL" ? Server.Records[channelName].dataCount : 1);
+                            response.DataCount = (uint)(property == "VAL" ? Server.Records[channelName].ElementsInRecord : 1);
                             response.Parameter1 = packet.Parameter1;
                             response.Parameter2 = ((ServerTcpReceiver)this.Pipe.FirstFilter).RegisterChannel(channelName + "." + property);
                             ((ServerTcpReceiver)this.Pipe.FirstFilter).Send(response);
@@ -110,13 +111,13 @@ namespace EpicsSharp.ChannelAccess.Server
                     case CommandID.CA_PROTO_READ_NOTIFY:
                         {
                             var record = ((ServerTcpReceiver)this.Pipe.FirstFilter).FindRecord(this.Server, packet.Parameter1);
-                            //Console.WriteLine("Read on " + record.Name);
                             object val= ((ServerTcpReceiver)this.Pipe.FirstFilter).RecordValue(this.Server, packet.Parameter1);
 
                             if (stringTypes.Contains((EpicsType)packet.DataType) && val == null)
                                 val = "";
-                            DataPacket response = DataPacketBuilder.Encode((EpicsType)packet.DataType, val,
-                                record, ((int)packet.DataCount == 0 ? record.dataCount : (int)packet.DataCount));
+
+                            var nbElements = packet.DataCount == 0 ? record.ElementsInRecord : Math.Min(record.ElementsInRecord, (int)packet.DataCount);
+                            DataPacket response = DataPacketBuilder.Encode((EpicsType)packet.DataType, val, record, nbElements);
                             response.Command = (ushort)CommandID.CA_PROTO_READ_NOTIFY;
                             response.Parameter1 = 1;
                             response.Parameter2 = packet.Parameter2;

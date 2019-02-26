@@ -2,10 +2,16 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;net461;netstandard2.0</TargetFrameworks>
-    <Description>EpicsSharp is a software library for the .NET platform implementing the Channel Access protocol used by EPICS (version 3.14). The library contains both the EPICS client as well as the EPICS server.</Description>
+    <Description>
+EpicsSharp is a software library for the .NET platform implementing the Channel Access protocol used by EPICS (version 3.14). The library contains both the EPICS client as well as the EPICS server.
+
+For documentation, please visit the GitHub repository.
+    </Description>
     <Company>Paul Scherrer Institute</Company>
-    <Copyright>Copyright © 2013 - 2018 Paul Scherrer Institute</Copyright>
+    <Copyright>Copyright © 2013 - 2019 Paul Scherrer Institute</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <PackageProjectUrl>https://github.com/paulscherrerinstitute/NetChannelAccess</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/paulscherrerinstitute/NetChannelAccess</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0'">

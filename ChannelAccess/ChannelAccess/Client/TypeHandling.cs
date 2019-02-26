@@ -1,7 +1,7 @@
 ﻿/*
  *  EpicsSharp - An EPICS Channel Access library for the .NET platform.
  *
- *  Copyright (C) 2013 - 2017  Paul Scherrer Institute, Switzerland
+ *  Copyright (C) 2013 - 2019  Paul Scherrer Institute, Switzerland
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -80,6 +80,14 @@ namespace EpicsSharp.ChannelAccess.Client
             {typeof(ExtAcknowledge<Enum>)  ,EpicsType.Labeled_Enum},
 
             // Array types
+
+            {typeof(byte[]),EpicsType.Byte},
+            {typeof(string[]),EpicsType.String},
+            {typeof(short[]),EpicsType.Short},
+            {typeof(int[]),EpicsType.Int},
+            {typeof(float[]),EpicsType.Float},
+            {typeof(double[]),EpicsType.Double},
+            {typeof(Enum[]),EpicsType.Enum},
 
             {typeof(ExtType<byte[]>) ,EpicsType.Status_Byte},
             {typeof(ExtType<string[]>),EpicsType.Status_String},
