@@ -50,10 +50,17 @@ namespace EpicsSharp.Common.Pipes
 
         void InitUdp(IPAddress address = null, int port = 0)
         {
+            udp = new UdpClient();
+            udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             if (address == null)
-                udp = new UdpClient(port);
+                udp.Client.Bind(new IPEndPoint(IPAddress.Any, port));
             else
-                udp = new UdpClient(new IPEndPoint(address, port));
+                udp.Client.Bind(new IPEndPoint(address, port));
+
+            /*if (address == null)
+                udp = new UdpClient(port);
+            else            
+                udp = new UdpClient(new IPEndPoint(address, port));*/
             try
             {
                 udp.Client.IOControl(SIO_UDP_CONNRESET, new byte[] { 0, 0, 0, 0 }, null);
