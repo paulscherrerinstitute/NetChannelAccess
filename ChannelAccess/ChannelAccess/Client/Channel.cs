@@ -886,14 +886,14 @@ namespace EpicsSharp.ChannelAccess.Client
             {
                 case ChannelStatus.REQUESTED:
                 case ChannelStatus.DISCONNECTED:
-                    if ((DateTime.UtcNow - statusChangeTime).TotalSeconds > 0.5 && !Client.Searcher.Contains(this))
+                    if ((DateTime.UtcNow - statusChangeTime).TotalSeconds > 10 && !Client.Searcher.Contains(this))
                     {
                         Status = ChannelStatus.CONNECTING;
                         Disconnect();
                     }
                     break;
                 case ChannelStatus.CONNECTING:
-                    if ((DateTime.UtcNow - statusChangeTime).TotalSeconds > 0.5)
+                    if ((DateTime.UtcNow - statusChangeTime).TotalSeconds > 10)
                     {
                         // Still searching
                         if (Client.Searcher.Contains(this))

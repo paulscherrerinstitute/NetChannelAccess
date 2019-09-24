@@ -72,6 +72,13 @@ namespace EpicsSharp.ChannelAccess.Client
 
         void SearchChannels()
         {
+            var version = Common.DataPacket.Create(16);
+            version.Command = 0;
+            version.DataType = 1;
+            version.DataCount = 13;
+            version.Parameter1 = 0;
+            version.Parameter2 = 0;
+
             while (needToRun)
             {
                 Thread.Sleep(50);
@@ -82,6 +89,7 @@ namespace EpicsSharp.ChannelAccess.Client
                 }
 
                 MemoryStream mem = new MemoryStream();
+                mem.Write(version.Data, 0, version.Data.Length);
                 lock (toSearch)
                 {
                     foreach (Channel c in toSearch)
@@ -105,7 +113,7 @@ namespace EpicsSharp.ChannelAccess.Client
 
                         //Console.WriteLine("Sent search for " + c.ChannelName);
                         mem.Write(c.SearchPacket.Data, 0, c.SearchPacket.Data.Length);
-                        if (mem.Length > 1400)
+                        if (mem.Length > 1300)
                         {
                             SendBuffer(mem.ToArray());
                             mem.Dispose();

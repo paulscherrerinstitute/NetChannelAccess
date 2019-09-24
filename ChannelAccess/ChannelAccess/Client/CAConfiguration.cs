@@ -105,6 +105,6 @@ namespace EpicsSharp.ChannelAccess.Client
         }
 
         public double EchoInterval { get; set; } = 20;
-        public int EchoSleeping { get; set; } = 1000;
+        public int EchoSleeping { get; set; } = 10000;
     }
 }

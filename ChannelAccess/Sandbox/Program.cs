@@ -20,6 +20,7 @@ using EpicsSharp.ChannelAccess.Client;
 using EpicsSharp.ChannelAccess.Server;
 using EpicsSharp.ChannelAccess.Server.RecordTypes;
 using System;
+using System.Net;
 using System.Threading;
 
 namespace Sandbox
@@ -35,7 +36,22 @@ namespace Sandbox
 
     internal class Program
     {
-        private static void Main(string[] args)
+        static void Main(string[] args)
+        {
+            var server = new CAServer(IPAddress.Parse("129.129.194.45"));
+
+            var record = server.CreateRecord<CAByteRecord>("TEST-BYTE");
+            record.Value = 5;
+            server.Start();
+
+            var client = new CAClient(5432);
+            client.Configuration.SearchAddress = "129.129.194.45";
+            var channel = client.CreateChannel<byte>("TEST-BYTE");
+            Console.WriteLine(channel.Get());
+            Console.ReadKey();
+        }
+
+        private static void S4(string[] args)
         {
             var client = new CAClient(5432);
             //client.Configuration.SearchAddress = "129.129.194.45:5432";

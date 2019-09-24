@@ -80,7 +80,7 @@ namespace EpicsSharp.ChannelAccess.Client
                 lock (Iocs)
                 {
                     DateTime now = DateTime.Now;
-                    toEcho = Iocs.Values.Where(row => (row.LastMessage - now).TotalSeconds > Configuration.EchoInterval).Select(row => (TcpReceiver)row[0]).ToList();
+                    toEcho = Iocs.Values.Where(row => (now-row.LastMessage).TotalSeconds > Configuration.EchoInterval).Select(row => (TcpReceiver)row[0]).ToList();
                     toEcho = Iocs.Select(row => (TcpReceiver)row.Value[0]).ToList();
                 }
                 foreach (var i in toEcho)
@@ -93,6 +93,7 @@ namespace EpicsSharp.ChannelAccess.Client
                     else
                     {
                         //Console.WriteLine("Sending echo");
+                        i.Pipe.LastMessage = DateTime.Now;
                         i.Echo();
                     }
                 }

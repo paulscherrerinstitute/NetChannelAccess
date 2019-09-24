@@ -45,6 +45,11 @@ namespace EpicsSharp.ChannelAccess.Examples
 
             CAStringRecord record = server.CreateRecord<CAStringRecord>("MY-STRING");
             record.Value = "Hello, EPICS world!";
+            record.PrepareRecord += (e, v) =>
+              {
+                  record.Value = "Hello, EPICS world! " + DateTime.Now;
+              };
+            record.Scan = Constants.ScanAlgorithm.SEC1;
             Console.WriteLine("Registered PV 'MY-STRING'");
             Console.WriteLine();
 

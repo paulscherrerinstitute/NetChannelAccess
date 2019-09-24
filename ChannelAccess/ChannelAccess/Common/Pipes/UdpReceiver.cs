@@ -16,25 +16,21 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net.Sockets;
-using System.Net;
 using EpicsSharp.ChannelAccess.Common;
+using System;
+using System.Net;
+using System.Net.Sockets;
 
 namespace EpicsSharp.Common.Pipes
 {
     internal class UdpReceiver : DataFilter
     {
-        UdpClient udp;
-        byte[] buff = new byte[8192 * 3];
-        bool disposed = false;
-        IPAddress address = null;
-        int udpPort = 0;
-
-        const int SIO_UDP_CONNRESET = -1744830452;
+        private UdpClient udp;
+        private byte[] buff = new byte[8192 * 3];
+        private bool disposed = false;
+        private IPAddress address = null;
+        private int udpPort = 0;
+        private const int SIO_UDP_CONNRESET = -1744830452;
         public UdpReceiver()
             : this(null, 0)
         {
@@ -48,7 +44,7 @@ namespace EpicsSharp.Common.Pipes
             InitUdp(address, udpPort);
         }
 
-        void InitUdp(IPAddress address = null, int port = 0)
+        private void InitUdp(IPAddress address = null, int port = 0)
         {
             udp = new UdpClient();
             udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
@@ -90,7 +86,7 @@ namespace EpicsSharp.Common.Pipes
             }
         }
 
-        void GotUdpMessage(IAsyncResult ar)
+        private void GotUdpMessage(IAsyncResult ar)
         {
             Pipe.LastMessage = DateTime.Now;
             IPEndPoint ipeSender = new IPEndPoint(IPAddress.Any, 0);
@@ -122,7 +118,7 @@ namespace EpicsSharp.Common.Pipes
                     catch
                     {
                     }
-                    InitUdp(this.address, udpPort);
+                    //InitUdp(this.address, udpPort);
                     //udp = new UdpClient(new IPEndPoint(IPAddress.Loopback, 0));
                     udp.BeginReceive(GotUdpMessage, null);
                 }
