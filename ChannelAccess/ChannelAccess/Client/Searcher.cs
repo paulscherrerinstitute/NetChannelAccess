@@ -118,6 +118,7 @@ namespace EpicsSharp.ChannelAccess.Client
                             SendBuffer(mem.ToArray());
                             mem.Dispose();
                             mem = new MemoryStream();
+                            mem.Write(version.Data, 0, version.Data.Length);
                         }
                     }
                 }
